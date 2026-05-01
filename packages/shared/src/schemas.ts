@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const RankSchema = z.enum(['gold', 'silver', 'bronze1', 'bronze2'])
 export const GenderSchema = z.enum(['M', 'F', 'X'])
-export const RiseCurveSchema = z.enum(['linear', 'rise-hold', 'staggered'])
+export const RiseCurveSchema = z.enum(['linear', 'rise-hold'])
 export const NamesModeSchema = z.enum(['fixed', 'fade-in', 'title-card'])
 export const RankLabelStyleSchema = z.enum(['position', 'medal', 'custom'])
 export const AthleteStatusSchema = z.enum(['empty', 'pending', 'ready'])

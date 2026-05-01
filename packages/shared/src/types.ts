@@ -1,7 +1,7 @@
 export type Rank = 'gold' | 'silver' | 'bronze1' | 'bronze2'
 export type RankPosition = 1 | 2 | 3
 export type Gender = 'M' | 'F' | 'X'
-export type RiseCurve = 'linear' | 'rise-hold' | 'staggered'
+export type RiseCurve = 'linear' | 'rise-hold'
 export type NamesMode = 'fixed' | 'fade-in' | 'title-card'
 export type RankLabelStyle = 'position' | 'medal' | 'custom'
 export type AthleteStatus = 'empty' | 'pending' | 'ready'
@@ -76,20 +76,6 @@ export interface AppConfig {
   podium: PodiumHeights
 }
 
-export interface RiseKeyframe {
-  rank: Rank
-  targetFraction: number   // 0..1, fraction of stage height the banner rises to
-  startMs: number
-  endMs: number
-  easing: Easing
-}
-
-export interface RiseSchedule {
-  totalMs: number
-  fadeOutMs: number
-  keyframes: RiseKeyframe[]
-}
-
 export interface PlayoutInstruction {
   ceremony: Ceremony
   resolvedAssets: {
@@ -97,7 +83,7 @@ export interface PlayoutInstruction {
     flagPaths: { gold: string; silver: string; bronze1: string; bronze2?: string | undefined }
     backgroundPath: string
   }
-  schedule: RiseSchedule
+  anthemDurationMs: number
   config: Pick<AppConfig, 'rankLabels' | 'ceremonyTitleText' | 'audio' | 'podium'>
 }
 

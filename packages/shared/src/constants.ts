@@ -3,11 +3,6 @@ import type { AppConfig } from './types.js'
 export const DEFAULT_FADE_OUT_MS = 1500
 export const DEFAULT_TITLE_CARD_MS = 3000
 export const DEFAULT_RISE_WINDOW_END = 0.85   // rise completes at 85% of anthem
-export const STAGGER_WINDOWS = {
-  bronze: [0.0, 0.4] as const,
-  silver: [0.2, 0.6] as const,
-  gold:   [0.4, 0.85] as const,
-}
 
 export const SHIPPED_DEFAULT_CONFIG: AppConfig = {
   version: 1,
