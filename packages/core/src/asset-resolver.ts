@@ -1,14 +1,5 @@
 import { join } from 'node:path'
-import { access } from 'node:fs/promises'
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await access(path)
-    return true
-  } catch {
-    return false
-  }
-}
+import { exists } from './fs-helpers.js'
 
 export async function resolveAnthemFor(noc: string, assetsRoot: string): Promise<string | null> {
   const code = noc.trim().toUpperCase()

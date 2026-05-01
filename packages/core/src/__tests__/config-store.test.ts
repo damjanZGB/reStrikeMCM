@@ -33,11 +33,15 @@ describe('loadConfig', () => {
     expect(cfg.disciplines).toContain('Kyorugi')
   })
 
-  it('falls back to in-memory defaults on invalid config', async () => {
+  it('falls back to in-memory defaults on invalid config and preserves the bad file', async () => {
+    const original = '{"version": 1, "disciplines": "not-an-array"}'
     const configPath = join(dir, 'config.json')
-    await writeFile(configPath, '{"version": 1, "disciplines": "not-an-array"}')
+    await writeFile(configPath, original)
     const cfg = await loadConfig(configPath, '/nonexistent')
     expect(cfg).toEqual(SHIPPED_DEFAULT_CONFIG)
+    // Behavioral guarantee: do NOT overwrite the operator's broken config
+    const onDisk = await readFile(configPath, 'utf-8')
+    expect(onDisk).toBe(original)
   })
 })
 
