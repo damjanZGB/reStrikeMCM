@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { listSessions, loadSession, saveSession } from '../session-store.js'
@@ -43,5 +43,13 @@ describe('listSessions', () => {
     const list = await listSessions(dir)
     expect(list).toHaveLength(2)
     expect(list.map(s => s.label).sort()).toEqual(['A', 'B'])
+  })
+
+  it('skips invalid session files and returns the valid ones', async () => {
+    await saveSession(dir, makeSession('Good'))
+    await writeFile(join(dir, 'broken.json'), '{ not valid json')
+    const list = await listSessions(dir)
+    expect(list).toHaveLength(1)
+    expect(list[0]?.label).toBe('Good')
   })
 })

@@ -27,7 +27,8 @@ export async function listSessions(sessionsDir: string): Promise<Session[]> {
       }
     }
     return sessions
-  } catch {
-    return []
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return []
+    throw err
   }
 }
