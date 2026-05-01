@@ -13,8 +13,8 @@ export interface Athlete {
   name: string
   noc: string
   status: AthleteStatus
-  anthemOverride?: string
-  flagOverride?: string
+  anthemOverride?: string | undefined
+  flagOverride?: string | undefined
 }
 
 export interface CeremonyDisplayOptions {
@@ -22,7 +22,7 @@ export interface CeremonyDisplayOptions {
   riseCurve: RiseCurve
   namesMode: NamesMode
   goldTint: boolean
-  backgroundOverride?: string
+  backgroundOverride?: string | undefined
 }
 
 export interface Ceremony {
@@ -35,7 +35,7 @@ export interface Ceremony {
   athletes: Athlete[]
   display: CeremonyDisplayOptions
   status: CeremonyStatus
-  playedAt?: string
+  playedAt?: string | undefined
 }
 
 export interface Session {
@@ -49,7 +49,7 @@ export interface Session {
 export interface RankLabels {
   position: [string, string, string, string]
   medal: [string, string, string, string]
-  custom?: [string, string, string, string]
+  custom?: [string, string, string, string] | undefined
 }
 
 export interface PodiumHeights {
@@ -94,7 +94,7 @@ export interface PlayoutInstruction {
   ceremony: Ceremony
   resolvedAssets: {
     anthemPath: string
-    flagPaths: { gold: string; silver: string; bronze1: string; bronze2?: string }
+    flagPaths: { gold: string; silver: string; bronze1: string; bronze2?: string | undefined }
     backgroundPath: string
   }
   schedule: RiseSchedule

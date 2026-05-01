@@ -16,6 +16,11 @@ describe('AppConfigSchema', () => {
     const bad = { ...SHIPPED_DEFAULT_CONFIG, podium: { ...SHIPPED_DEFAULT_CONFIG.podium, goldHeightPct: 110 } }
     expect(() => AppConfigSchema.parse(bad)).toThrow()
   })
+
+  it('rejects empty disciplines or ageCategories arrays', () => {
+    expect(() => AppConfigSchema.parse({ ...SHIPPED_DEFAULT_CONFIG, disciplines: [] })).toThrow()
+    expect(() => AppConfigSchema.parse({ ...SHIPPED_DEFAULT_CONFIG, ageCategories: [] })).toThrow()
+  })
 })
 
 describe('AthleteSchema', () => {

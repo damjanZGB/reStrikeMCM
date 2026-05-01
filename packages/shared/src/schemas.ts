@@ -51,8 +51,8 @@ const FourStrings = z.tuple([z.string(), z.string(), z.string(), z.string()])
 
 export const AppConfigSchema = z.object({
   version: z.literal(1),
-  disciplines: z.array(z.string()),
-  ageCategories: z.array(z.string()),
+  disciplines: z.array(z.string()).min(1),
+  ageCategories: z.array(z.string()).min(1),
   genders: z.array(z.string()).min(1),
   rankLabels: z.object({
     position: FourStrings,
