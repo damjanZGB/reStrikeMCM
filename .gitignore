@@ -1,0 +1,10 @@
+node_modules/
+dist/
+out/
+.vite/
+.electron/
+.superpowers/
+sessions/
+*.log
+.DS_Store
+config.json
