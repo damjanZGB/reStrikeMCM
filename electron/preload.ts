@@ -21,10 +21,21 @@ const api = {
   ceremony: {
     play: (instruction: any) => ipcRenderer.invoke('ceremony:play', instruction),
     stop: () => ipcRenderer.invoke('ceremony:stop'),
+    emitPhaseChange: (payload: any) => ipcRenderer.send('ceremony:phase-change', payload),
     onPhaseChange: (cb: (e: any) => void) => {
       const listener = (_: any, payload: any) => cb(payload)
       ipcRenderer.on('ceremony:phase-change', listener)
       return () => ipcRenderer.removeListener('ceremony:phase-change', listener)
+    },
+    onPlay: (cb: (instr: any) => void) => {
+      const listener = (_: any, payload: any) => cb(payload)
+      ipcRenderer.on('ceremony:play', listener)
+      return () => ipcRenderer.removeListener('ceremony:play', listener)
+    },
+    onStop: (cb: () => void) => {
+      const listener = () => cb()
+      ipcRenderer.on('ceremony:stop', listener)
+      return () => ipcRenderer.removeListener('ceremony:stop', listener)
     },
   },
 }
