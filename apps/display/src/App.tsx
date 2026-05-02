@@ -5,10 +5,19 @@ import { api } from './ipc-bridge.js'
 
 export function App() {
   const [instruction, setInstruction] = useState<PlayoutInstruction | null>(null)
+  const [defaultBackdropPath, setDefaultBackdropPath] = useState<string | null>(null)
+
   useEffect(() => {
     const offPlay = api.ceremony.onPlay(setInstruction)
     const offStop = api.ceremony.onStop(() => setInstruction(null))
     return () => { offPlay(); offStop() }
   }, [])
-  return <PlayoutEngine instruction={instruction} />
+
+  useEffect(() => {
+    api.display.resolveDefaultBackdrop()
+      .then(setDefaultBackdropPath)
+      .catch(err => console.error('default backdrop resolve failed', err))
+  }, [])
+
+  return <PlayoutEngine instruction={instruction} defaultBackdropPath={defaultBackdropPath} />
 }

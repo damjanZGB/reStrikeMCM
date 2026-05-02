@@ -24,6 +24,7 @@ const api = {
   display: {
     push: () => ipcRenderer.invoke('display:push'),
     reset: () => ipcRenderer.invoke('display:reset'),
+    resolveDefaultBackdrop: () => ipcRenderer.invoke('display:resolve-default-backdrop'),
     onLost: (cb: () => void) => {
       const listener = () => cb()
       ipcRenderer.on('display:lost', listener)

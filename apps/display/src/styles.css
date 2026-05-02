@@ -78,7 +78,7 @@ html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; backg
 /* Wrapper for everything that fades together at the end of a ceremony
    (title-overlay, display-title, banner-stage). The backdrop is OUTSIDE
    this wrapper so it stays visible across ceremonies. */
-.playout-content { position: absolute; inset: 0; transition: opacity 500ms ease; }
+.playout-content { position: absolute; inset: 0; transition: opacity 1000ms ease; }
 .playout-content.flag-fading { opacity: 0; }
 
 .title-card-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; gap: 1.5vw; animation: fadeIn 600ms ease forwards; }

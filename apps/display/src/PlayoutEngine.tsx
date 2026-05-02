@@ -39,14 +39,17 @@ function buildTitleStyles(title: CeremonyTitle): { wrapper: React.CSSProperties;
   }
 }
 
-interface Props { instruction: PlayoutInstruction | null }
+interface Props {
+  instruction: PlayoutInstruction | null
+  defaultBackdropPath?: string | null | undefined
+}
 
 const RANK_BADGE_CLASS: Record<Rank, string> = {
   gold: 'badge-gold', silver: 'badge-silver', bronze1: 'badge-bronze', bronze2: 'badge-bronze',
 }
 const RANK_INDEX: Record<Rank, 0|1|2|3> = { gold: 0, silver: 1, bronze1: 2, bronze2: 3 }
 
-export function PlayoutEngine({ instruction }: Props) {
+export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
   const [phase, setPhase] = useState<PlayoutPhase>('idle')
   const [t, setT] = useState(0)
   const startedAtRef = useRef<number | null>(null)
@@ -119,14 +122,28 @@ export function PlayoutEngine({ instruction }: Props) {
       return () => clearTimeout(t1)
     }
     if (phase === 'flag-fade') {
-      const t2 = setTimeout(() => setPhase('idle'), 500)
+      const t2 = setTimeout(() => setPhase('idle'), 1000)
       return () => clearTimeout(t2)
     }
   }, [phase, instruction])
 
-  if (!instruction) return <div className="display-root" />
+  // Backdrop is rendered always — uses the instruction's resolved path
+  // when a ceremony is active, otherwise falls back to the default backdrop
+  // (fetched on App mount). Visible as soon as display 2 opens.
+  const backdropPath = instruction?.resolvedAssets.backgroundPath ?? defaultBackdropPath
+  const backdropStyle = backdropPath
+    ? { backgroundImage: `url("${toFileUrl(backdropPath)}")` }
+    : undefined
 
-  const { ceremony, resolvedAssets } = instruction
+  if (!instruction) {
+    return (
+      <div className="display-root">
+        {backdropPath && <div className="backdrop show" style={backdropStyle} />}
+      </div>
+    )
+  }
+
+  const { ceremony, resolvedAssets: _ } = instruction
   const orderedRanks: Rank[] = ceremony.bronzeCount === 2
     ? ['silver', 'gold', 'bronze1', 'bronze2']
     : ['silver', 'gold', 'bronze1']
@@ -143,7 +160,7 @@ export function PlayoutEngine({ instruction }: Props) {
 
   return (
     <div className="display-root">
-      <div className="backdrop show" style={{ backgroundImage: `url("${toFileUrl(resolvedAssets.backgroundPath)}")` }} />
+      {backdropPath && <div className="backdrop show" style={backdropStyle} />}
 
       {phase === 'title-card' && textsEnabled && (
         <div className="title-card-overlay">
@@ -186,7 +203,7 @@ export function PlayoutEngine({ instruction }: Props) {
           <div className="banner-stage">
             {orderedRanks.map(r => {
               const a = ceremony.athletes.find(x => x.rank === r)!
-              const flagPath = flagPathFor(r, resolvedAssets.flagPaths)
+              const flagPath = flagPathFor(r, instruction.resolvedAssets.flagPaths)
               return (
                 <div key={r} className="banner-col">
                   <Banner

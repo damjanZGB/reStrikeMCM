@@ -1,5 +1,8 @@
 import { ipcMain, screen } from 'electron'
+import { join } from 'node:path'
+import { loadConfig } from '@restrike-mcm/core'
 import { createDisplayWindow, closeDisplayWindow, loadDisplayContent } from '../windows.js'
+import { ASSETS_ROOT, CONFIG_PATH, DEFAULT_CONFIG_PATH } from '../paths.js'
 
 export function registerDisplayChannels() {
   ipcMain.handle('display:push', async () => {
@@ -15,5 +18,10 @@ export function registerDisplayChannels() {
   })
   ipcMain.handle('display:reset', () => {
     closeDisplayWindow()
+  })
+
+  ipcMain.handle('display:resolve-default-backdrop', async () => {
+    const config = await loadConfig(CONFIG_PATH, DEFAULT_CONFIG_PATH)
+    return join(ASSETS_ROOT, 'backgrounds', config.defaultBackground)
   })
 }

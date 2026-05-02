@@ -13,6 +13,7 @@ export interface IpcContract {
   'display:push': { req: void; res: { ok: boolean; reason?: string } }
   'display:reset': { req: void; res: void }
   'display:lost': { req: void; res: void }
+  'display:resolve-default-backdrop': { req: void; res: string }
   'ceremony:play': { req: Ceremony; res: void }
   'ceremony:stop': { req: void; res: void }
   'ceremony:phase-change': { req: { phase: PlayoutPhase; t: number }; res: void }

@@ -4,6 +4,9 @@ export interface DisplayApi {
   assets: {
     readFlagJson(path: string): Promise<unknown>
   }
+  display: {
+    resolveDefaultBackdrop(): Promise<string>
+  }
   ceremony: {
     onPlay(cb: (i: PlayoutInstruction) => void): () => void
     onStop(cb: () => void): () => void
