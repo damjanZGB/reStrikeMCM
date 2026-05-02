@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import type { Athlete, Rank } from '@restrike-mcm/shared'
 import { api } from '../ipc-bridge.js'
+import { SubstituteButton } from './SubstituteButton.js'
 
 interface Props {
   athlete: Athlete
@@ -57,6 +58,16 @@ export function AthleteRow({ athlete, onChange, optional }: Props) {
         maxLength={3}
       />
       <div className={dotClass} title={tooltip} />
+      {athlete.status === 'pending' && resolution && (
+        <div className="substitute-row">
+          {!resolution.anthem && !athlete.anthemOverride && (
+            <SubstituteButton athlete={athlete} missing="anthem" onSubstitute={onChange} />
+          )}
+          {!resolution.flag && !athlete.flagOverride && (
+            <SubstituteButton athlete={athlete} missing="flag" onSubstitute={onChange} />
+          )}
+        </div>
+      )}
     </div>
   )
 }

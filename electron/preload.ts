@@ -18,6 +18,9 @@ const api = {
     push: () => ipcRenderer.invoke('display:push'),
     reset: () => ipcRenderer.invoke('display:reset'),
   },
+  fs: {
+    pickFile: (filters: any) => ipcRenderer.invoke('fs:pick-file', filters),
+  },
   ceremony: {
     play: (instruction: any) => ipcRenderer.invoke('ceremony:play', instruction),
     stop: () => ipcRenderer.invoke('ceremony:stop'),

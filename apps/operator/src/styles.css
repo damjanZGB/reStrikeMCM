@@ -71,3 +71,6 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
 .grid-3 input, .grid-4 input { background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 6px 8px; border-radius: 3px; }
 .grid-3 label { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; color: #aaa; }
+
+.substitute-row { grid-column: 1 / -1; padding: 4px 0 0 36px; display: flex; gap: 6px; }
+.btn-substitute { background: #f39c12; color: #000; border: 0; padding: 4px 10px; border-radius: 3px; font-size: 0.72rem; cursor: pointer; }

@@ -1,7 +1,8 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { mkdir } from 'node:fs/promises'
+import chokidar from 'chokidar'
 import { ASSETS_ROOT, SESSIONS_ROOT } from './paths.js'
-import { createOperatorWindow } from './windows.js'
+import { createOperatorWindow, getOperatorWindow } from './windows.js'
 import { registerConfigChannels } from './ipc/config-channels.js'
 import { registerSessionChannels } from './ipc/session-channels.js'
 import { registerAssetsChannels } from './ipc/assets-channels.js'
@@ -16,6 +17,16 @@ async function bootstrap() {
   registerAssetsChannels()
   registerDisplayChannels()
   registerCeremonyChannels()
+
+  ipcMain.handle('fs:pick-file', async (_e, filters: any) => {
+    const r = await dialog.showOpenDialog({ properties: ['openFile'], filters })
+    return r.canceled ? null : r.filePaths[0]
+  })
+
+  const watcher = chokidar.watch(ASSETS_ROOT, { ignoreInitial: true })
+  watcher.on('add', () => getOperatorWindow()?.webContents.send('assets:changed'))
+  watcher.on('unlink', () => getOperatorWindow()?.webContents.send('assets:changed'))
+
   const win = createOperatorWindow()
   if (process.env.ELECTRON_RENDERER_URL) {
     win.loadURL(`${process.env.ELECTRON_RENDERER_URL}/operator/`)
