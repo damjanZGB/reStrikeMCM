@@ -10,6 +10,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build && electron-builder --win portable",
     "test": "pnpm -r test",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint"
   },
@@ -21,6 +22,8 @@
     "electron-builder": "^24.13.0",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0",
-    "@types/node": "^20.12.0"
+    "@types/node": "^20.12.0",
+    "@playwright/test": "^1.44.0",
+    "playwright": "^1.44.0"
   }
 }
