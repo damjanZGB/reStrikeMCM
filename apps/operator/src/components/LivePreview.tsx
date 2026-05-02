@@ -22,7 +22,7 @@ export function LivePreview({ ceremony, config }: Props) {
     <div className="live-preview">
       <div className="lp-label">LIVE PREVIEW · what display 2 shows</div>
       <div className="lp-title">{ceremony.category} · {ceremony.ageCategory} · {ceremony.discipline}</div>
-      <div className="lp-event">{config.ceremonyTitleText}</div>
+      <div className="lp-event" style={{ color: config.title.color }}>{config.title.text}</div>
       <div className="lp-stage">
         {ordered.map(r => {
           const a = ceremony.athletes.find(x => x.rank === r)

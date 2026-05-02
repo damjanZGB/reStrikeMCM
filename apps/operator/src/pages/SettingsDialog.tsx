@@ -1,6 +1,19 @@
 import React, { useState } from 'react'
-import type { AppConfig } from '@restrike-mcm/shared'
+import type { AppConfig, CeremonyTitle, TitleAnimation, HorizontalAlign, VerticalAlign } from '@restrike-mcm/shared'
 import { useConfig } from '../hooks/useConfig.js'
+
+const FONT_FAMILIES = [
+  { value: 'system-ui, -apple-system, sans-serif', label: 'System UI' },
+  { value: 'Impact, sans-serif', label: 'Impact' },
+  { value: '"Arial Black", sans-serif', label: 'Arial Black' },
+  { value: 'Arial, sans-serif', label: 'Arial' },
+  { value: 'Helvetica, sans-serif', label: 'Helvetica' },
+  { value: 'Verdana, sans-serif', label: 'Verdana' },
+  { value: '"Trebuchet MS", sans-serif', label: 'Trebuchet MS' },
+  { value: 'Georgia, serif', label: 'Georgia' },
+  { value: '"Times New Roman", serif', label: 'Times New Roman' },
+  { value: '"Courier New", monospace', label: 'Courier New' },
+]
 
 interface Props { open: boolean; onClose(): void }
 
@@ -30,6 +43,7 @@ export function SettingsDialog({ open, onClose }: Props) {
   if (!open || !config) return null
 
   const set = <K extends keyof AppConfig>(k: K, v: AppConfig[K]) => update({ [k]: v } as Partial<AppConfig>)
+  const setTitle = (partial: Partial<CeremonyTitle>) => set('title', { ...config.title, ...partial })
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -64,8 +78,88 @@ export function SettingsDialog({ open, onClose }: Props) {
           </div>
 
           <div className="settings-section">
-            <h5>Ceremony title text</h5>
-            <input value={config.ceremonyTitleText} onChange={e => set('ceremonyTitleText', e.target.value)} />
+            <h5>Title — text</h5>
+            <input value={config.title.text} onChange={e => setTitle({ text: e.target.value })} />
+
+            <h5 style={{ marginTop: 14 }}>Title — typography</h5>
+            <div className="grid-2">
+              <label>Font family
+                <select value={config.title.fontFamily} onChange={e => setTitle({ fontFamily: e.target.value })}>
+                  {FONT_FAMILIES.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                </select>
+              </label>
+              <label>Font weight
+                <select value={config.title.fontWeight} onChange={e => setTitle({ fontWeight: parseInt(e.target.value) })}>
+                  {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(w => <option key={w} value={w}>{w}</option>)}
+                </select>
+              </label>
+            </div>
+            <div className="grid-2">
+              <label>Font size (vw)
+                <input type="number" min="0.5" max="20" step="0.1"
+                  value={config.title.fontSize}
+                  onChange={e => setTitle({ fontSize: parseFloat(e.target.value) || 2.5 })} />
+              </label>
+              <label>Letter spacing (em)
+                <input type="number" min="-1" max="2" step="0.01"
+                  value={config.title.letterSpacing}
+                  onChange={e => setTitle({ letterSpacing: parseFloat(e.target.value) || 0 })} />
+              </label>
+            </div>
+            <label>Color
+              <input type="color" value={config.title.color}
+                onChange={e => setTitle({ color: e.target.value })} />
+            </label>
+
+            <h5 style={{ marginTop: 14 }}>Title — effects</h5>
+            <label>Drop shadow (CSS text-shadow)
+              <input value={config.title.textShadow}
+                onChange={e => setTitle({ textShadow: e.target.value })}
+                placeholder="0 2px 8px rgba(0, 0, 0, 0.8)" />
+            </label>
+            <label>Animation
+              <select value={config.title.animation}
+                onChange={e => setTitle({ animation: e.target.value as TitleAnimation })}>
+                <option value="none">None</option>
+                <option value="fade-in">Fade in</option>
+                <option value="pulse">Pulse</option>
+                <option value="glow">Glow</option>
+                <option value="slide-down">Slide down</option>
+                <option value="zoom">Zoom</option>
+              </select>
+            </label>
+
+            <h5 style={{ marginTop: 14 }}>Title — position</h5>
+            <div className="grid-2">
+              <label>Horizontal alignment
+                <select value={config.title.textAlign}
+                  onChange={e => setTitle({ textAlign: e.target.value as HorizontalAlign })}>
+                  <option value="left">Left</option>
+                  <option value="center">Center</option>
+                  <option value="right">Right</option>
+                </select>
+              </label>
+              <label>Vertical alignment
+                <select value={config.title.verticalAlign}
+                  onChange={e => setTitle({ verticalAlign: e.target.value as VerticalAlign })}>
+                  <option value="top">Top</option>
+                  <option value="middle">Middle</option>
+                  <option value="bottom">Bottom</option>
+                </select>
+              </label>
+            </div>
+            <div className="grid-2">
+              <label>X position (% of viewport width)
+                <input type="number" min="0" max="100" step="1"
+                  value={config.title.x}
+                  onChange={e => setTitle({ x: parseFloat(e.target.value) || 50 })} />
+              </label>
+              <label>Y position (% of viewport height)
+                <input type="number" min="0" max="100" step="1"
+                  value={config.title.y}
+                  onChange={e => setTitle({ y: parseFloat(e.target.value) || 14 })} />
+              </label>
+            </div>
           </div>
 
           <div className="settings-section">

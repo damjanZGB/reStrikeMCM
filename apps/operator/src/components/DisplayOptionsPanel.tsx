@@ -1,17 +1,44 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Ceremony, RiseCurve, NamesMode, RankLabelStyle } from '@restrike-mcm/shared'
 import { api } from '../ipc-bridge.js'
 
 interface Props {
   display: Ceremony['display']
-  audioInfo: { filename: string; durationMs: number } | null
+  audioInfo: { filename: string; durationMs: number; path: string } | null
   onChange(d: Ceremony['display']): void
 }
 
 const shortName = (p: string) => p.split(/[\\/]/).pop() ?? p
 
+function toFileUrl(absPath: string): string {
+  const normalized = absPath.replace(/\\/g, '/')
+  return normalized.startsWith('/') ? `file://${normalized}` : `file:///${normalized}`
+}
+
 export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
   const set = <K extends keyof Ceremony['display']>(k: K, v: Ceremony['display'][K]) => onChange({ ...display, [k]: v })
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const [previewing, setPreviewing] = useState(false)
+
+  // Stop preview when the anthem path changes (athlete swap, ceremony switch, etc.)
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    setPreviewing(false)
+  }, [audioInfo?.path])
+
+  const togglePreview = () => {
+    if (!audioRef.current) return
+    if (previewing) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setPreviewing(false)
+    } else {
+      audioRef.current.play().then(() => setPreviewing(true)).catch(err => console.error('audio play failed', err))
+    }
+  }
 
   const pickBackground = async () => {
     const path = await api.fs.pickFile([{ name: 'Image', extensions: ['jpg', 'jpeg', 'png', 'webp'] }])
@@ -67,6 +94,17 @@ export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
         <div className="audio-block">
           🎵 <strong>{audioInfo.filename}</strong> · {(audioInfo.durationMs / 1000).toFixed(1)} s
           <div className="audio-sub">rise completes @ {(audioInfo.durationMs * 0.85 / 1000).toFixed(1)} s · fade-out 1.5 s</div>
+          <div className="audio-actions">
+            <audio
+              ref={audioRef}
+              src={toFileUrl(audioInfo.path)}
+              onEnded={() => setPreviewing(false)}
+              preload="metadata"
+            />
+            <button className="btn-secondary" onClick={togglePreview}>
+              {previewing ? '⏸ Stop preview' : '▶ Preview anthem'}
+            </button>
+          </div>
         </div>
       ) : (
         <div className="audio-block muted">no anthem resolved yet</div>

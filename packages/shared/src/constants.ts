@@ -1,8 +1,23 @@
-import type { AppConfig } from './types.js'
+import type { AppConfig, CeremonyTitle } from './types.js'
 
 export const DEFAULT_FADE_OUT_MS = 1500
 export const DEFAULT_TITLE_CARD_MS = 3000
 export const DEFAULT_RISE_WINDOW_END = 0.85   // rise completes at 85% of anthem
+
+export const DEFAULT_TITLE: CeremonyTitle = {
+  text: 'MEDAL CEREMONY',
+  fontFamily: 'system-ui, -apple-system, sans-serif',
+  fontSize: 2.5,
+  fontWeight: 700,
+  letterSpacing: 0,
+  color: '#ffd700',
+  textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
+  animation: 'fade-in',
+  textAlign: 'center',
+  verticalAlign: 'top',
+  x: 50,
+  y: 14,
+}
 
 export const SHIPPED_DEFAULT_CONFIG: AppConfig = {
   version: 1,
@@ -13,7 +28,7 @@ export const SHIPPED_DEFAULT_CONFIG: AppConfig = {
     position: ['1ST', '2ND', '3RD', '3RD'],
     medal:    ['GOLD', 'SILVER', 'BRONZE', 'BRONZE'],
   },
-  ceremonyTitleText: 'MEDAL CEREMONY',
+  title: DEFAULT_TITLE,
   defaultBackground: 'default-backdrop.jpg',
   defaults: {
     riseCurve: 'rise-hold',

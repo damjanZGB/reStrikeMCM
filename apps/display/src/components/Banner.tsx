@@ -6,7 +6,7 @@ interface Props {
   flagJsonPath: string                      // absolute path
   riseProgress: number                      // 0..1
   targetFraction: number                    // 0..1 — how much of stage height to occupy
-  goldTintEnabled?: boolean
+  goldTintEnabled?: boolean | undefined
 }
 
 export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEnabled }: Props) {
@@ -26,7 +26,16 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
           loop: true,
           autoplay: true,
           animationData: data,
+          rendererSettings: { preserveAspectRatio: 'xMidYMid slice' },
         })
+        // Lottie sets the SVG's width/height attributes from the animation's
+        // canvas size; clear them so our 100%/100% CSS rule actually wins.
+        const svg = lottieRef.current.querySelector('svg')
+        if (svg) {
+          svg.removeAttribute('width')
+          svg.removeAttribute('height')
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
+        }
       })
       .catch(err => console.error('Lottie load failed', err))
     return () => { cancelled = true; animRef.current?.destroy(); animRef.current = null }
@@ -38,10 +47,10 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
   const heightPct = targetFraction * 100
 
   return (
-    <div className="banner-slot" style={{ height: `${heightPct}%` }}>
+    <div className={`banner-slot${goldTintEnabled ? ' gold-tint' : ''}`} style={{ height: `${heightPct}%` }}>
       <div
         ref={lottieRef}
-        className={`banner${goldTintEnabled ? ' tint-gold' : ''}`}
+        className="banner"
         style={{ transform: `translateY(${translateY}%)` }}
       />
     </div>

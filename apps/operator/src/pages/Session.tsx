@@ -39,7 +39,7 @@ export function Session() {
   const { config } = useConfig()
   const { session, createNew, load, update, save } = useSession()
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number } | null>(null)
+  const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number; path: string } | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [loaderOpen, setLoaderOpen] = useState(false)
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -83,7 +83,7 @@ export function Session() {
     api.assets.resolveNoc(goldNoc).then(async r => {
       if (cancelled || !r.anthemPath) { if (!cancelled) setAudioInfo(null); return }
       const { durationMs } = await api.assets.audioDuration(r.anthemPath)
-      if (!cancelled) setAudioInfo({ filename: `${goldNoc}.mp3`, durationMs })
+      if (!cancelled) setAudioInfo({ filename: `${goldNoc}.mp3`, durationMs, path: r.anthemPath })
     })
     return () => { cancelled = true }
   }, [active?.athletes.find(a => a.rank === 'gold')?.noc])

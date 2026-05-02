@@ -7,7 +7,20 @@
     "position": ["1ST", "2ND", "3RD", "3RD"],
     "medal":    ["GOLD", "SILVER", "BRONZE", "BRONZE"]
   },
-  "ceremonyTitleText": "MEDAL CEREMONY",
+  "title": {
+    "text": "MEDAL CEREMONY",
+    "fontFamily": "system-ui, -apple-system, sans-serif",
+    "fontSize": 2.5,
+    "fontWeight": 700,
+    "letterSpacing": 0,
+    "color": "#ffd700",
+    "textShadow": "0 2px 8px rgba(0, 0, 0, 0.8)",
+    "animation": "fade-in",
+    "textAlign": "center",
+    "verticalAlign": "top",
+    "x": 50,
+    "y": 14
+  },
   "defaultBackground": "default-backdrop.jpg",
   "defaults": {
     "riseCurve": "rise-hold",

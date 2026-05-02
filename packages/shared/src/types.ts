@@ -7,6 +7,24 @@ export type RankLabelStyle = 'position' | 'medal' | 'custom'
 export type AthleteStatus = 'empty' | 'pending' | 'ready'
 export type CeremonyStatus = 'empty' | 'pending' | 'ready' | 'played'
 export type Easing = 'linear' | 'easeOutCubic' | 'easeInOutCubic'
+export type TitleAnimation = 'none' | 'fade-in' | 'pulse' | 'glow' | 'slide-down' | 'zoom'
+export type HorizontalAlign = 'left' | 'center' | 'right'
+export type VerticalAlign = 'top' | 'middle' | 'bottom'
+
+export interface CeremonyTitle {
+  text: string
+  fontFamily: string
+  fontSize: number          // viewport-width units (vw)
+  fontWeight: number        // 100..900
+  letterSpacing: number     // em
+  color: string             // hex (#rrggbb)
+  textShadow: string        // CSS text-shadow value
+  animation: TitleAnimation
+  textAlign: HorizontalAlign
+  verticalAlign: VerticalAlign
+  x: number                 // 0..100, percent of viewport width (anchor position)
+  y: number                 // 0..100, percent of viewport height (anchor position)
+}
 
 export interface Athlete {
   rank: Rank
@@ -64,7 +82,7 @@ export interface AppConfig {
   ageCategories: string[]
   genders: string[]
   rankLabels: RankLabels
-  ceremonyTitleText: string
+  title: CeremonyTitle
   defaultBackground: string
   defaults: {
     riseCurve: RiseCurve
@@ -84,7 +102,7 @@ export interface PlayoutInstruction {
     backgroundPath: string
   }
   anthemDurationMs: number
-  config: Pick<AppConfig, 'rankLabels' | 'ceremonyTitleText' | 'audio' | 'podium'>
+  config: Pick<AppConfig, 'rankLabels' | 'title' | 'audio' | 'podium'>
 }
 
 export type PlayoutPhase = 'idle' | 'title-card' | 'rising' | 'holding' | 'fading-out' | 'ended'
