@@ -29,6 +29,9 @@ importers:
 
   apps/display:
     dependencies:
+      '@restrike-mcm/playout':
+        specifier: workspace:*
+        version: link:../../packages/playout
       '@restrike-mcm/shared':
         specifier: workspace:*
         version: link:../../packages/shared

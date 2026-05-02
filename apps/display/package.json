@@ -6,6 +6,7 @@
   "scripts": { "typecheck": "tsc --noEmit" },
   "dependencies": {
     "@restrike-mcm/shared": "workspace:*",
+    "@restrike-mcm/playout": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "lottie-web": "^5.12.0",
