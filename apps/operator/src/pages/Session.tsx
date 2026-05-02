@@ -10,6 +10,7 @@ import { LivePreview } from '../components/LivePreview.js'
 import { DisplayOptionsPanel } from '../components/DisplayOptionsPanel.js'
 import { PlayBar } from '../components/PlayBar.js'
 import { SettingsDialog } from './SettingsDialog.js'
+import { ToastList, type Toast } from '../components/Toast.js'
 
 function makeCeremony(config: AppConfig): Ceremony {
   return {
@@ -38,6 +39,12 @@ export function Session() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number } | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [toasts, setToasts] = useState<Toast[]>([])
+
+  const showToast = (kind: Toast['kind'], message: string) => {
+    setToasts(prev => [...prev, { id: Date.now() + Math.random(), kind, message }])
+  }
+  const dismissToast = (id: number) => setToasts(prev => prev.filter(t => t.id !== id))
 
   // create a default session if none exists
   useEffect(() => { if (!session) createNew(`Session ${new Date().toLocaleDateString()}`) }, [session, createNew])
@@ -78,7 +85,7 @@ export function Session() {
     try {
       await api.ceremony.play(active)  // main constructs PlayoutInstruction
     } catch (err) {
-      alert(`Cannot play ceremony: ${err}`)
+      showToast('error', `Cannot play ceremony: ${err instanceof Error ? err.message : err}`)
     }
   }
 
@@ -125,6 +132,7 @@ export function Session() {
         onPlay={handlePlay} onReset={handleReset} onStop={handleStop}
       />
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <ToastList toasts={toasts} onDismiss={dismissToast} />
     </>
   )
 }
