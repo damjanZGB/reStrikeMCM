@@ -13,6 +13,7 @@ const api = {
   assets: {
     resolveNoc: (noc: string) => ipcRenderer.invoke('assets:resolve-noc', noc),
     audioDuration: (path: string) => ipcRenderer.invoke('assets:audio-duration', path),
+    readFlagJson: (path: string) => ipcRenderer.invoke('assets:read-flag-json', path),
   },
   display: {
     push: () => ipcRenderer.invoke('display:push'),

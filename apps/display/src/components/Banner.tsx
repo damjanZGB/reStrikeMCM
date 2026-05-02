@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import lottie, { type AnimationItem } from 'lottie-web'
+import { api } from '../ipc-bridge.js'
 
 interface Props {
   flagJsonPath: string                      // absolute path
@@ -12,12 +13,11 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
   const lottieRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<AnimationItem | null>(null)
 
-  // Mount Lottie once, given path
+  // Mount Lottie once, given path. Loads JSON via IPC (renderer can't fetch file://).
   useEffect(() => {
     if (!lottieRef.current) return
     let cancelled = false
-    fetch('file://' + flagJsonPath)
-      .then(r => r.json())
+    api.assets.readFlagJson(flagJsonPath)
       .then(data => {
         if (cancelled || !lottieRef.current) return
         animRef.current = lottie.loadAnimation({

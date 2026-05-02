@@ -8,6 +8,7 @@ export interface IpcContract {
   'session:save': { req: Session; res: void }
   'assets:resolve-noc': { req: string; res: { anthemPath: string|null; flagPath: string|null } }
   'assets:audio-duration': { req: string; res: { durationMs: number } }
+  'assets:read-flag-json': { req: string; res: unknown }
   'display:push': { req: void; res: { ok: boolean; reason?: string } }
   'display:reset': { req: void; res: void }
   'ceremony:play': { req: Ceremony; res: void }

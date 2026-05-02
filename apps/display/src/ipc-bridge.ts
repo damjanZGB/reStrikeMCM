@@ -1,6 +1,9 @@
 import type { PlayoutInstruction, PlayoutPhase } from '@restrike-mcm/shared'
 
 export interface DisplayApi {
+  assets: {
+    readFlagJson(path: string): Promise<unknown>
+  }
   ceremony: {
     onPlay(cb: (i: PlayoutInstruction) => void): () => void
     onStop(cb: () => void): () => void
