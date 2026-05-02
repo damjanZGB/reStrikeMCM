@@ -18,9 +18,9 @@ async function bootstrap() {
   registerDisplayChannels()
   registerCeremonyChannels()
 
-  ipcMain.handle('fs:pick-file', async (_e, filters: any) => {
+  ipcMain.handle('fs:pick-file', async (_e, filters: { name: string; extensions: string[] }[]) => {
     const r = await dialog.showOpenDialog({ properties: ['openFile'], filters })
-    return r.canceled ? null : r.filePaths[0]
+    return r.canceled ? null : r.filePaths[0] ?? null
   })
 
   const watcher = chokidar.watch(ASSETS_ROOT, { ignoreInitial: true })

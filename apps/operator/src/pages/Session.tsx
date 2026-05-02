@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { Ceremony, AppConfig } from '@restrike-mcm/shared'
 import { useSession } from '../hooks/useSession.js'
 import { useConfig } from '../hooks/useConfig.js'
@@ -76,7 +76,7 @@ export function Session() {
   const handlePlay = async () => {
     if (!active) return
     try {
-      await api.ceremony.play(active as any)  // main constructs PlayoutInstruction
+      await api.ceremony.play(active)  // main constructs PlayoutInstruction
     } catch (err) {
       alert(`Cannot play ceremony: ${err}`)
     }

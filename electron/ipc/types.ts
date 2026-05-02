@@ -13,4 +13,6 @@ export interface IpcContract {
   'ceremony:play': { req: Ceremony; res: void }
   'ceremony:stop': { req: void; res: void }
   'ceremony:phase-change': { req: { phase: PlayoutPhase; t: number }; res: void }
+  'fs:pick-file': { req: { name: string; extensions: string[] }[]; res: string | null }
+  'assets:changed': { req: void; res: void }
 }

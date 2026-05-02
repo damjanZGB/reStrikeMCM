@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { createDisplayWindow, closeDisplayWindow, getDisplayWindow } from '../windows.js'
+import { createDisplayWindow, closeDisplayWindow } from '../windows.js'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 

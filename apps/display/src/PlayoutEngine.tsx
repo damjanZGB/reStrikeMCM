@@ -18,6 +18,13 @@ function targetFractionFor(rank: Rank, podium: PodiumHeights): number {
   return podium.bronzeHeightPct / 100
 }
 
+function flagPathFor(rank: Rank, paths: PlayoutInstruction['resolvedAssets']['flagPaths']): string {
+  if (rank === 'gold')    return paths.gold
+  if (rank === 'silver')  return paths.silver
+  if (rank === 'bronze1') return paths.bronze1
+  return paths.bronze2!  // gated upstream by bronzeCount === 2 in orderedRanks
+}
+
 export function PlayoutEngine({ instruction }: Props) {
   const [phase, setPhase] = useState<PlayoutPhase>('idle')
   const [t, setT] = useState(0)
@@ -129,7 +136,7 @@ export function PlayoutEngine({ instruction }: Props) {
           <div className="banner-stage">
             {orderedRanks.map(r => {
               const a = ceremony.athletes.find(x => x.rank === r)!
-              const flagPath = (resolvedAssets.flagPaths as any)[r] as string
+              const flagPath = flagPathFor(r, resolvedAssets.flagPaths)
               return (
                 <div key={r} className="banner-col" style={{ display: 'flex', flexDirection: 'column', flex: 1, maxWidth: '14%' }}>
                   <Banner
