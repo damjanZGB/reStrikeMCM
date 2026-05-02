@@ -37,5 +37,5 @@ export const SHIPPED_DEFAULT_CONFIG: AppConfig = {
     rankLabelStyle: 'position',
   },
   audio: { fadeOutMs: DEFAULT_FADE_OUT_MS },
-  podium: { goldHeightPct: 100, silverHeightPct: 78, bronzeHeightPct: 58 },
+  podium: { goldHeightPct: 100, silverHeightPct: 78, bronzeHeightPct: 68 },
 }

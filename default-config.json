@@ -29,5 +29,5 @@
     "rankLabelStyle": "position"
   },
   "audio": { "fadeOutMs": 1500 },
-  "podium": { "goldHeightPct": 100, "silverHeightPct": 78, "bronzeHeightPct": 58 }
+  "podium": { "goldHeightPct": 100, "silverHeightPct": 78, "bronzeHeightPct": 68 }
 }
