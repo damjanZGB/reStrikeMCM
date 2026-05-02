@@ -1,0 +1,12 @@
+{
+  "name": "@restrike-mcm/electron",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./out/main/main.js",
+  "dependencies": {
+    "@restrike-mcm/shared": "workspace:*",
+    "@restrike-mcm/core": "workspace:*",
+    "@restrike-mcm/playout": "workspace:*"
+  }
+}

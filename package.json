@@ -12,5 +12,13 @@
     "lint": "pnpm -r lint"
   },
   "engines": { "node": ">=18.18" },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-vite": "^2.1.0",
+    "electron-builder": "^24.13.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@types/node": "^20.12.0"
+  }
 }
