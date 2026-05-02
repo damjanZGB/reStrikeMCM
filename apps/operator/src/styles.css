@@ -1,0 +1,6 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color: #fff; }
+.app { display: flex; flex-direction: column; height: 100vh; }
+.titlebar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #13131e; border-bottom: 1px solid #2a2a3a; }
+.session-label { color: #888; }
+.loading { padding: 20px; color: #888; }
