@@ -23,9 +23,20 @@ async function bootstrap() {
     return r.canceled ? null : r.filePaths[0] ?? null
   })
 
-  const watcher = chokidar.watch(ASSETS_ROOT, { ignoreInitial: true })
-  watcher.on('add', () => getOperatorWindow()?.webContents.send('assets:changed'))
-  watcher.on('unlink', () => getOperatorWindow()?.webContents.send('assets:changed'))
+  const watcher = chokidar.watch(ASSETS_ROOT, {
+    ignoreInitial: true,
+    awaitWriteFinish: { stabilityThreshold: 200, pollInterval: 50 },
+  })
+  // Coalesce burst events (e.g., bulk file paste) into one renderer notification.
+  let assetsChangedTimer: NodeJS.Timeout | null = null
+  const notifyAssetsChanged = () => {
+    if (assetsChangedTimer) clearTimeout(assetsChangedTimer)
+    assetsChangedTimer = setTimeout(() => {
+      getOperatorWindow()?.webContents.send('assets:changed')
+    }, 300)
+  }
+  watcher.on('add', notifyAssetsChanged)
+  watcher.on('unlink', notifyAssetsChanged)
 
   const win = createOperatorWindow()
   if (process.env.ELECTRON_RENDERER_URL) {
