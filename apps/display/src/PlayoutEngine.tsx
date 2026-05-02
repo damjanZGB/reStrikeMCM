@@ -164,7 +164,7 @@ export function PlayoutEngine({ instruction }: Props) {
               const a = ceremony.athletes.find(x => x.rank === r)!
               const flagPath = flagPathFor(r, resolvedAssets.flagPaths)
               return (
-                <div key={r} className="banner-col" style={{ display: 'flex', flexDirection: 'column', flex: 1, maxWidth: '14%' }}>
+                <div key={r} className="banner-col">
                   <Banner
                     flagJsonPath={flagPath}
                     riseProgress={sharedProgress}
