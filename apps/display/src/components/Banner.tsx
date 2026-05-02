@@ -9,18 +9,29 @@ interface Props {
   goldTintEnabled?: boolean | undefined
 }
 
+function forceSvgFill(container: HTMLDivElement | null): void {
+  const svg = container?.querySelector('svg')
+  if (!svg) return
+  // Lottie sets width/height from the source canvas (e.g., 445×900). Strip those
+  // and force the SVG to fill its container; use `slice` so the flag fills
+  // (cropping over-wide content rather than letterboxing).
+  svg.removeAttribute('width')
+  svg.removeAttribute('height')
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
+  svg.style.cssText = 'width: 100%; height: 100%; display: block;'
+}
+
 export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEnabled }: Props) {
   const lottieRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<AnimationItem | null>(null)
 
-  // Mount Lottie once, given path. Loads JSON via IPC (renderer can't fetch file://).
   useEffect(() => {
     if (!lottieRef.current) return
     let cancelled = false
     api.assets.readFlagJson(flagJsonPath)
       .then(data => {
         if (cancelled || !lottieRef.current) return
-        animRef.current = lottie.loadAnimation({
+        const anim = lottie.loadAnimation({
           container: lottieRef.current,
           renderer: 'svg',
           loop: true,
@@ -28,26 +39,25 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
           animationData: data,
           rendererSettings: { preserveAspectRatio: 'xMidYMid slice' },
         })
-        // Lottie sets the SVG's width/height attributes from the animation's
-        // canvas size; clear them so our 100%/100% CSS rule actually wins.
-        const svg = lottieRef.current.querySelector('svg')
-        if (svg) {
-          svg.removeAttribute('width')
-          svg.removeAttribute('height')
-          svg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
-        }
+        animRef.current = anim
+        // Lottie creates the SVG synchronously but the inner <image> base64
+        // asset finishes decoding asynchronously — by which point Lottie has
+        // re-set width/height attributes to the asset's native size. Override
+        // both immediately AND after DOMLoaded fires.
+        forceSvgFill(lottieRef.current)
+        anim.addEventListener('DOMLoaded', () => forceSvgFill(lottieRef.current))
       })
       .catch(err => console.error('Lottie load failed', err))
     return () => { cancelled = true; animRef.current?.destroy(); animRef.current = null }
   }, [flagJsonPath])
 
-  // Apply rise transform: at riseProgress=0, banner sits at translateY(120%) (off-screen below)
-  // at riseProgress=1, banner sits at translateY(0) — its slot height already enforces final position
-  const translateY = (1 - riseProgress) * 120  // percent of own height
-  const heightPct = targetFraction * 100
+  // Rise transform: at riseProgress=0, banner sits at translateY(120%) — off-screen below.
+  // At riseProgress=1, translateY(0) — anchored at slot bottom.
+  const translateY = (1 - riseProgress) * 120
+  const slotHeightPct = targetFraction * 100
 
   return (
-    <div className={`banner-slot${goldTintEnabled ? ' gold-tint' : ''}`} style={{ height: `${heightPct}%` }}>
+    <div className={`banner-slot${goldTintEnabled ? ' gold-tint' : ''}`} style={{ height: `${slotHeightPct}%` }}>
       <div
         ref={lottieRef}
         className="banner"
