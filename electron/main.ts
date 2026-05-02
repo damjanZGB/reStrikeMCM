@@ -1,8 +1,8 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, screen } from 'electron'
 import { mkdir } from 'node:fs/promises'
 import chokidar from 'chokidar'
 import { ASSETS_ROOT, SESSIONS_ROOT } from './paths.js'
-import { createOperatorWindow, getOperatorWindow } from './windows.js'
+import { createOperatorWindow, getOperatorWindow, getDisplayWindow, closeDisplayWindow } from './windows.js'
 import { registerConfigChannels } from './ipc/config-channels.js'
 import { registerSessionChannels } from './ipc/session-channels.js'
 import { registerAssetsChannels } from './ipc/assets-channels.js'
@@ -37,6 +37,14 @@ async function bootstrap() {
   }
   watcher.on('add', notifyAssetsChanged)
   watcher.on('unlink', notifyAssetsChanged)
+
+  // Notify operator if the secondary display vanishes (cable unplug, OS rearrange).
+  screen.on('display-removed', () => {
+    if (getDisplayWindow()) {
+      closeDisplayWindow()
+      getOperatorWindow()?.webContents.send('display:lost')
+    }
+  })
 
   const win = createOperatorWindow()
   if (process.env.ELECTRON_RENDERER_URL) {

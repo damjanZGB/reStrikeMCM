@@ -23,6 +23,11 @@ const api = {
   display: {
     push: () => ipcRenderer.invoke('display:push'),
     reset: () => ipcRenderer.invoke('display:reset'),
+    onLost: (cb: () => void) => {
+      const listener = () => cb()
+      ipcRenderer.on('display:lost', listener)
+      return () => ipcRenderer.removeListener('display:lost', listener)
+    },
   },
   fs: {
     pickFile: (filters: any) => ipcRenderer.invoke('fs:pick-file', filters),

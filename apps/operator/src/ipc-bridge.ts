@@ -10,7 +10,11 @@ export interface OperatorApi {
     audioDuration(path: string): Promise<{ durationMs: number }>
     onAssetsChanged(cb: () => void): () => void
   }
-  display: { push(): Promise<{ ok: boolean; reason?: string }>; reset(): Promise<void> }
+  display: {
+    push(): Promise<{ ok: boolean; reason?: string }>
+    reset(): Promise<void>
+    onLost(cb: () => void): () => void
+  }
   ceremony: {
     play(c: Ceremony): Promise<void>
     stop(): Promise<void>

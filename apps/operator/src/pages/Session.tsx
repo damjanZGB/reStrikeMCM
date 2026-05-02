@@ -48,6 +48,11 @@ export function Session() {
   }
   const dismissToast = (id: number) => setToasts(prev => prev.filter(t => t.id !== id))
 
+  // Surface display-disconnect events as a toast.
+  useEffect(() => {
+    return api.display.onLost(() => showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.'))
+  }, [])
+
   // create a default session if none exists
   useEffect(() => { if (!session) createNew(`Session ${new Date().toLocaleDateString()}`) }, [session, createNew])
 
