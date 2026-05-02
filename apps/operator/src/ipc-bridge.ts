@@ -8,6 +8,7 @@ export interface OperatorApi {
   assets: {
     resolveNoc(noc: string): Promise<{ anthemPath: string|null; flagPath: string|null }>
     audioDuration(path: string): Promise<{ durationMs: number }>
+    onAssetsChanged(cb: () => void): () => void
   }
   display: { push(): Promise<{ ok: boolean; reason?: string }>; reset(): Promise<void> }
   ceremony: {

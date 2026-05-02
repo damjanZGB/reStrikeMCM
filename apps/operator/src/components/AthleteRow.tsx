@@ -18,6 +18,12 @@ const RANK_LABEL: Record<Rank, { num: string; cls: string }> = {
 
 export function AthleteRow({ athlete, onChange, optional }: Props) {
   const [resolution, setResolution] = useState<{ anthem: string|null; flag: string|null } | null>(null)
+  const [assetsVersion, setAssetsVersion] = useState(0)
+
+  // Re-resolve when chokidar reports an asset added/removed.
+  useEffect(() => {
+    return api.assets.onAssetsChanged(() => setAssetsVersion(v => v + 1))
+  }, [])
 
   useEffect(() => {
     if (!athlete.noc) { setResolution(null); return }
@@ -31,7 +37,7 @@ export function AthleteRow({ athlete, onChange, optional }: Props) {
       onChange({ ...athlete, status: ready ? 'ready' : 'pending' })
     })
     return () => { cancelled = true }
-  }, [athlete.noc])
+  }, [athlete.noc, assetsVersion])
 
   const dotClass =
     athlete.status === 'ready' ? 'status-dot status-ok' :
