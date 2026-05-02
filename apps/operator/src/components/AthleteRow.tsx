@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import type { Athlete, Rank } from '@restrike-mcm/shared'
 import { api } from '../ipc-bridge.js'
 import { SubstituteButton } from './SubstituteButton.js'
+import { isAthleteReady } from '../lib/derive.js'
 
 interface Props {
   athlete: Athlete
@@ -31,9 +32,7 @@ export function AthleteRow({ athlete, onChange, optional }: Props) {
     api.assets.resolveNoc(athlete.noc).then(r => {
       if (cancelled) return
       setResolution({ anthem: r.anthemPath, flag: r.flagPath })
-      const allFound = !!r.anthemPath && !!r.flagPath
-      const overrideOk = !!athlete.anthemOverride && !!athlete.flagOverride
-      const ready = allFound || overrideOk || (r.anthemPath && athlete.flagOverride) || (r.flagPath && athlete.anthemOverride)
+      const ready = isAthleteReady(r, { anthemOverride: athlete.anthemOverride, flagOverride: athlete.flagOverride })
       onChange({ ...athlete, status: ready ? 'ready' : 'pending' })
     })
     return () => { cancelled = true }

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { PlayoutInstruction, PlayoutPhase, Rank, PodiumHeights } from '@restrike-mcm/shared'
+import type { PlayoutInstruction, PlayoutPhase, Rank } from '@restrike-mcm/shared'
 import { riseProgress } from '@restrike-mcm/playout'
 import { Banner } from './components/Banner.js'
 import { createAnthemPlayer, type AnthemPlayer } from './audio.js'
 import { api } from './ipc-bridge.js'
+import { isBannerVisible, shouldShowNames, targetFractionFor, flagPathFor } from './lib/playout-helpers.js'
 
 interface Props { instruction: PlayoutInstruction | null }
 
@@ -11,19 +12,6 @@ const RANK_BADGE_CLASS: Record<Rank, string> = {
   gold: 'badge-gold', silver: 'badge-silver', bronze1: 'badge-bronze', bronze2: 'badge-bronze',
 }
 const RANK_INDEX: Record<Rank, 0|1|2|3> = { gold: 0, silver: 1, bronze1: 2, bronze2: 3 }
-
-function targetFractionFor(rank: Rank, podium: PodiumHeights): number {
-  if (rank === 'gold')   return podium.goldHeightPct / 100
-  if (rank === 'silver') return podium.silverHeightPct / 100
-  return podium.bronzeHeightPct / 100
-}
-
-function flagPathFor(rank: Rank, paths: PlayoutInstruction['resolvedAssets']['flagPaths']): string {
-  if (rank === 'gold')    return paths.gold
-  if (rank === 'silver')  return paths.silver
-  if (rank === 'bronze1') return paths.bronze1
-  return paths.bronze2!  // gated upstream by bronzeCount === 2 in orderedRanks
-}
 
 export function PlayoutEngine({ instruction }: Props) {
   const [phase, setPhase] = useState<PlayoutPhase>('idle')
@@ -92,12 +80,8 @@ export function PlayoutEngine({ instruction }: Props) {
     ? ['silver', 'gold', 'bronze1', 'bronze2']
     : ['silver', 'gold', 'bronze1']
 
-  const showNames =
-    ceremony.display.namesMode === 'fixed' ||
-    (ceremony.display.namesMode === 'fade-in' && phase === 'holding') ||
-    (ceremony.display.namesMode === 'title-card' && (phase === 'title-card' || phase === 'holding' || phase === 'fading-out' || phase === 'ended'))
-
-  const bannerVisible = phase === 'rising' || phase === 'holding' || phase === 'fading-out' || phase === 'ended'
+  const showNames = shouldShowNames(ceremony.display.namesMode, phase)
+  const bannerVisible = isBannerVisible(phase)
 
   // All banners share the same rise progress (simultaneous rise)
   const sharedProgress = riseProgress(ceremony.display.riseCurve, t)

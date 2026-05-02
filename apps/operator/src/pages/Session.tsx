@@ -12,6 +12,7 @@ import { PlayBar } from '../components/PlayBar.js'
 import { SettingsDialog } from './SettingsDialog.js'
 import { SessionLoader } from './SessionLoader.js'
 import { ToastList, type Toast } from '../components/Toast.js'
+import { deriveCeremonyStatus } from '../lib/derive.js'
 
 function makeCeremony(config: AppConfig): Ceremony {
   return {
@@ -80,10 +81,7 @@ export function Session() {
   }
 
   const updateActive = (next: Ceremony) => {
-    const allReady = next.athletes.every(a => a.status === 'ready')
-    const status: Ceremony['status'] = next.status === 'played' ? 'played' :
-                                       allReady ? 'ready' :
-                                       next.athletes.some(a => a.status !== 'empty') ? 'pending' : 'empty'
+    const status = deriveCeremonyStatus(next.status, next.athletes)
     update(s => ({ ...s, ceremonies: s.ceremonies.map(c => c.id === next.id ? { ...next, status } : c) }))
   }
 
