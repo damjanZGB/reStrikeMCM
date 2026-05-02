@@ -36,13 +36,13 @@ export function MiniBanner({ noc, heightPct }: Props) {
           loop: true,
           autoplay: true,
           animationData: data,
-          rendererSettings: { preserveAspectRatio: 'xMidYMid slice' },
+          rendererSettings: { preserveAspectRatio: 'xMidYMid meet' },
         })
         const svg = ref.current.querySelector('svg')
         if (svg) {
           svg.removeAttribute('width')
           svg.removeAttribute('height')
-          svg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
         }
         setHasFlag(true)
       }).catch(err => console.error('[mini-banner] readFlagJson', err))

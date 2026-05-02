@@ -12,12 +12,12 @@ interface Props {
 function forceSvgFill(container: HTMLDivElement | null): void {
   const svg = container?.querySelector('svg')
   if (!svg) return
-  // Lottie sets width/height from the source canvas (e.g., 445×900). Strip those
-  // and force the SVG to fill its container; use `slice` so the flag fills
-  // (cropping over-wide content rather than letterboxing).
+  // Strip Lottie's width/height attrs (set to source canvas size) so our
+  // 100%/100% CSS rule wins. Use `meet` to preserve the flag's native
+  // aspect ratio inside the banner — never crop or stretch the artwork.
   svg.removeAttribute('width')
   svg.removeAttribute('height')
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
   svg.style.cssText = 'width: 100%; height: 100%; display: block;'
 }
 
@@ -37,7 +37,7 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
           loop: true,
           autoplay: true,
           animationData: data,
-          rendererSettings: { preserveAspectRatio: 'xMidYMid slice' },
+          rendererSettings: { preserveAspectRatio: 'xMidYMid meet' },
         })
         animRef.current = anim
         // Lottie creates the SVG synchronously but the inner <image> base64
