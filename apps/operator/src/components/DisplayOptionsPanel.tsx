@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Ceremony, RiseCurve, NamesMode, RankLabelStyle } from '@restrike-mcm/shared'
+import { api } from '../ipc-bridge.js'
 
 interface Props {
   display: Ceremony['display']
@@ -7,8 +8,16 @@ interface Props {
   onChange(d: Ceremony['display']): void
 }
 
+const shortName = (p: string) => p.split(/[\\/]/).pop() ?? p
+
 export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
   const set = <K extends keyof Ceremony['display']>(k: K, v: Ceremony['display'][K]) => onChange({ ...display, [k]: v })
+
+  const pickBackground = async () => {
+    const path = await api.fs.pickFile([{ name: 'Image', extensions: ['jpg', 'jpeg', 'png', 'webp'] }])
+    if (path) set('backgroundOverride', path)
+  }
+
   return (
     <aside className="display-options">
       <h4>Display options</h4>
@@ -39,6 +48,19 @@ export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
       <label className="toggle-row">Subtle gold tint
         <input type="checkbox" checked={display.goldTint} onChange={e => set('goldTint', e.target.checked)} />
       </label>
+
+      <h4>Background</h4>
+      <div className="bg-row">
+        <span className="bg-current">
+          {display.backgroundOverride ? `🖼️ ${shortName(display.backgroundOverride)}` : 'Default backdrop'}
+        </span>
+        <div className="bg-actions">
+          <button className="btn-secondary" onClick={pickBackground}>Choose…</button>
+          {display.backgroundOverride && (
+            <button className="btn-secondary" onClick={() => set('backgroundOverride', undefined)}>Reset</button>
+          )}
+        </div>
+      </div>
 
       <h4>Audio</h4>
       {audioInfo ? (

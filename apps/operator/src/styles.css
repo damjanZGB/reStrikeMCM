@@ -48,6 +48,10 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .display-options label { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; color: #aaa; margin-bottom: 12px; }
 .display-options select, .display-options input { background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 7px 9px; border-radius: 3px; font-size: 0.85rem; }
 .display-options .toggle-row { flex-direction: row; align-items: center; justify-content: space-between; }
+.bg-row { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: #1a1a2e; border-radius: 4px; margin-bottom: 12px; }
+.bg-current { font-size: 0.78rem; color: #ccc; word-break: break-all; }
+.bg-actions { display: flex; gap: 6px; }
+.bg-actions .btn-secondary { padding: 4px 10px; font-size: 0.72rem; }
 .audio-block { background: #1a1a2e; border-radius: 4px; padding: 8px 10px; font-size: 0.75rem; color: #ccc; }
 .audio-block .audio-sub { color: #888; font-size: 0.66rem; margin-top: 4px; }
 .audio-block.muted { color: #888; }
