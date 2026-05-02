@@ -37,7 +37,7 @@ function makeCeremony(config: AppConfig): Ceremony {
 
 export function Session() {
   const { config } = useConfig()
-  const { session, createNew, load, update } = useSession()
+  const { session, createNew, load, update, save } = useSession()
   const [activeId, setActiveId] = useState<string | null>(null)
   const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number } | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -101,8 +101,23 @@ export function Session() {
     update(s => ({ ...s, ceremonies: s.ceremonies.map(c => c.id === next.id ? { ...next, status } : c) }))
   }
 
+  const handleSave = async () => {
+    try {
+      await save()
+      showToast('info', 'Session saved')
+    } catch (err) {
+      showToast('error', `Save failed: ${err instanceof Error ? err.message : err}`)
+    }
+  }
+
   const handlePlay = async () => {
     if (!active) return
+    // Auto-save before playing so on-disk state matches what's about to play.
+    try {
+      await save()
+    } catch (err) {
+      showToast('error', `Save failed: ${err instanceof Error ? err.message : err}`)
+    }
     try {
       await api.ceremony.play(active)  // main constructs PlayoutInstruction
     } catch (err) {
@@ -123,6 +138,7 @@ export function Session() {
         <strong>reStrike MCM</strong>
         <span className="session-label">{session.label}</span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+          <button className="btn-secondary" onClick={handleSave}>💾 Save</button>
           <button className="btn-secondary" onClick={() => setLoaderOpen(true)}>📂 Load session</button>
           <button className="btn-secondary" onClick={() => setSettingsOpen(true)}>⚙ Settings</button>
           <button className="btn-secondary" onClick={() => api.display.push()}>📺 Push to Display 2</button>

@@ -22,6 +22,14 @@ export function useSession() {
     setSession(prev => prev ? updater(prev) : prev)
   }, [])
 
+  // Explicit save: cancels any pending debounced save, then writes immediately.
+  // Throws on failure so callers can show error toasts.
+  const save = useCallback(async () => {
+    if (!session) return
+    if (saveTimer.current) { clearTimeout(saveTimer.current); saveTimer.current = null }
+    await api.session.save(session)
+  }, [session])
+
   // debounced auto-save
   useEffect(() => {
     if (!session) return
@@ -32,5 +40,5 @@ export function useSession() {
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
   }, [session])
 
-  return { session, createNew, load, update }
+  return { session, createNew, load, update, save }
 }
