@@ -9,6 +9,7 @@ import { CeremonyEditor } from '../components/CeremonyEditor.js'
 import { LivePreview } from '../components/LivePreview.js'
 import { DisplayOptionsPanel } from '../components/DisplayOptionsPanel.js'
 import { PlayBar } from '../components/PlayBar.js'
+import { SettingsDialog } from './SettingsDialog.js'
 
 function makeCeremony(config: AppConfig): Ceremony {
   return {
@@ -36,6 +37,7 @@ export function Session() {
   const { session, createNew, update } = useSession()
   const [activeId, setActiveId] = useState<string | null>(null)
   const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number } | null>(null)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   // create a default session if none exists
   useEffect(() => { if (!session) createNew(`Session ${new Date().toLocaleDateString()}`) }, [session, createNew])
@@ -93,7 +95,7 @@ export function Session() {
         <strong>reStrike MCM</strong>
         <span className="session-label">{session.label}</span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <button className="btn-secondary">⚙ Settings</button>
+          <button className="btn-secondary" onClick={() => setSettingsOpen(true)}>⚙ Settings</button>
           <button className="btn-secondary" onClick={() => api.display.push()}>📺 Push to Display 2</button>
         </div>
       </header>
@@ -122,6 +124,7 @@ export function Session() {
         durationMs={audioInfo?.durationMs ?? null}
         onPlay={handlePlay} onReset={handleReset} onStop={handleStop}
       />
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
   )
 }
