@@ -1,0 +1,19 @@
+{
+  "name": "@restrike-mcm/display",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@restrike-mcm/shared": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lottie-web": "^5.12.0",
+    "howler": "^2.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0", "@types/react-dom": "^18.2.0",
+    "@types/howler": "^2.2.11",
+    "typescript": "^5.4.0"
+  }
+}
