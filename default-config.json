@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "disciplines": ["Kyorugi", "Poomsae", "Para-TKD K44", "Para-TKD P44", "Freestyle Poomsae", "Pair Poomsae", "Team Poomsae", "Breaking"],
+  "ageCategories": ["Cadet", "Junior", "Senior", "Master M30+", "Master M40+", "Master M50+", "Youth"],
+  "genders": ["Men", "Women", "Mixed"],
+  "rankLabels": {
+    "position": ["1ST", "2ND", "3RD", "3RD"],
+    "medal":    ["GOLD", "SILVER", "BRONZE", "BRONZE"]
+  },
+  "ceremonyTitleText": "MEDAL CEREMONY",
+  "defaultBackground": "default-backdrop.jpg",
+  "defaults": {
+    "riseCurve": "rise-hold",
+    "namesMode": "title-card",
+    "goldTint": false,
+    "rankLabelStyle": "position"
+  },
+  "audio": { "fadeOutMs": 1500 },
+  "podium": { "goldHeightPct": 100, "silverHeightPct": 78, "bronzeHeightPct": 58 }
+}
