@@ -8,7 +8,8 @@ html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; backg
 .title-overlay .event { font-size: 2.5vw; font-weight: 700; color: gold; margin-top: 0.5vw; }
 .banner-stage { position: absolute; left: 0; right: 0; bottom: 0; height: 80%; display: flex; align-items: flex-end; justify-content: center; gap: 5%; padding: 0 10% 4%; }
 .banner-slot { flex: 1; max-width: 14%; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
-.banner { width: 100%; aspect-ratio: 1 / 2; box-shadow: 0 4px 16px rgba(0,0,0,0.6); transition: transform 0ms; }
+.banner { width: 100%; aspect-ratio: 1 / 2; box-shadow: 0 4px 16px rgba(0,0,0,0.6); transition: transform 0ms; overflow: hidden; }
+.banner svg { width: 100%; height: 100%; display: block; }
 .banner.tint-gold { box-shadow: 0 0 24px rgba(255,215,0,0.55), 0 0 48px rgba(255,215,0,0.25), 0 4px 16px rgba(0,0,0,0.6); }
 .name-tag { color: #fff; text-align: center; font-size: 1.2vw; line-height: 1.4; margin-top: 1vw; }
 .name-tag .noc { color: #aaa; font-size: 1vw; letter-spacing: 0.15em; margin-top: 0.3vw; }
