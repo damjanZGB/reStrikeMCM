@@ -42,6 +42,7 @@ export function createDisplayWindow(): BrowserWindow {
       autoplayPolicy: 'no-user-gesture-required' as const,
     },
   })
+  displayWin.webContents.openDevTools({ mode: 'detach' })  // TEMP debug
   return displayWin
 }
 

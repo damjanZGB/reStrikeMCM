@@ -15,8 +15,11 @@ export function App() {
 
   useEffect(() => {
     api.display.resolveDefaultBackdrop()
-      .then(setDefaultBackdropPath)
-      .catch(err => console.error('default backdrop resolve failed', err))
+      .then(p => {
+        console.log('[display] default backdrop path:', p)
+        setDefaultBackdropPath(p)
+      })
+      .catch(err => console.error('[display] default backdrop resolve failed', err))
   }, [])
 
   return <PlayoutEngine instruction={instruction} defaultBackdropPath={defaultBackdropPath} />

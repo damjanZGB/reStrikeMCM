@@ -138,7 +138,7 @@ export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
   if (!instruction) {
     return (
       <div className="display-root">
-        {backdropPath && <div className="backdrop show" style={backdropStyle} />}
+        {backdropPath && <div className="backdrop" style={backdropStyle} />}
       </div>
     )
   }
@@ -160,7 +160,7 @@ export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
 
   return (
     <div className="display-root">
-      {backdropPath && <div className="backdrop show" style={backdropStyle} />}
+      {backdropPath && <div className="backdrop" style={backdropStyle} />}
 
       {phase === 'title-card' && textsEnabled && (
         <div className="title-card-overlay">

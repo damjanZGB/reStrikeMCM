@@ -1,8 +1,10 @@
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; cursor: none; }
 .display-root { position: relative; width: 100vw; height: 100vh; }
-.backdrop { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 800ms ease; }
-.backdrop.show { opacity: 1; }
+/* Backdrop is rendered as soon as a path is known; always opacity 1 so it's
+   visible immediately on display open. No fade-in to avoid race conditions
+   between class application and transition computation. */
+.backdrop { position: absolute; inset: 0; background-size: cover; background-position: center; background-color: #0a0a14; opacity: 1; }
 .title-overlay { position: absolute; top: 5%; left: 0; right: 0; text-align: center; color: #fff; }
 .title-overlay .cat { font-size: 1.5vw; letter-spacing: 0.2em; color: #aaa; text-transform: uppercase; }
 .title-overlay .event { font-size: 2.5vw; font-weight: 700; color: gold; margin-top: 0.5vw; }
