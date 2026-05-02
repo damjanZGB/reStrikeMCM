@@ -1,0 +1,24 @@
+appId: com.restrike.mcm
+productName: reStrikeMCM
+asar: true
+files:
+  - "out/**/*"
+  - "package.json"
+  - "!**/*.map"
+extraFiles:
+  - from: assets
+    to: assets
+    filter: ["**/*"]
+  - from: default-config.json
+    to: default-config.json
+  - from: docs/runbook.md
+    to: runbook.md
+directories:
+  output: dist
+win:
+  target:
+    - target: portable
+      arch: [x64]
+  artifactName: ${productName}-${version}-portable.exe
+portable:
+  artifactName: ${productName}-${version}-portable.exe

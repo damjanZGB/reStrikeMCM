@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "description": "reStrike MCM — Medal Ceremony Manager",
+  "productName": "reStrikeMCM",
+  "appId": "com.restrike.mcm",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build && electron-builder --win portable",
