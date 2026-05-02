@@ -1,8 +1,12 @@
 import { app, BrowserWindow, dialog, ipcMain, screen } from 'electron'
 import { mkdir } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import chokidar from 'chokidar'
 import { ASSETS_ROOT, SESSIONS_ROOT } from './paths.js'
 import { createOperatorWindow, getOperatorWindow, getDisplayWindow, closeDisplayWindow } from './windows.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 import { registerConfigChannels } from './ipc/config-channels.js'
 import { registerSessionChannels } from './ipc/session-channels.js'
 import { registerAssetsChannels } from './ipc/assets-channels.js'
@@ -47,10 +51,13 @@ async function bootstrap() {
   })
 
   const win = createOperatorWindow()
+  win.webContents.on('did-fail-load', (_e, code, desc, url) => {
+    console.error(`[main] operator did-fail-load ${code} ${desc} ${url}`)
+  })
   if (process.env.ELECTRON_RENDERER_URL) {
-    win.loadURL(`${process.env.ELECTRON_RENDERER_URL}/operator/`)
+    await win.loadURL(`${process.env.ELECTRON_RENDERER_URL}/apps/operator/`)
   } else {
-    win.loadFile('out/renderer/operator/index.html')
+    await win.loadFile(join(__dirname, '../renderer/apps/operator/index.html'))
   }
 }
 

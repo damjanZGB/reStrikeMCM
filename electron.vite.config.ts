@@ -3,7 +3,9 @@ import { resolve } from 'node:path'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    // chokidar is bundled (not externalized) so its transitive readdirp is inlined —
+    // pnpm's symlink layout otherwise loses transitive deps when packed into asar.
+    plugins: [externalizeDepsPlugin({ exclude: ['chokidar'] })],
     build: { outDir: 'out/main', rollupOptions: { input: { main: resolve('electron/main.ts') } } },
   },
   preload: {
