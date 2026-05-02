@@ -2,7 +2,7 @@
 html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; cursor: none; }
 .display-root { position: relative; width: 100vw; height: 100vh; }
 .backdrop { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 800ms ease; }
-.backdrop.show { opacity: 0.35; }
+.backdrop.show { opacity: 1; }
 .title-overlay { position: absolute; top: 5%; left: 0; right: 0; text-align: center; color: #fff; }
 .title-overlay .cat { font-size: 1.5vw; letter-spacing: 0.2em; color: #aaa; text-transform: uppercase; }
 .title-overlay .event { font-size: 2.5vw; font-weight: 700; color: gold; margin-top: 0.5vw; }
