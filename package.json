@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "out/main/main.js",
   "description": "reStrike MCM — Medal Ceremony Manager",
+  "author": "damjanZGB",
   "productName": "reStrikeMCM",
   "appId": "com.restrike.mcm",
   "scripts": {
