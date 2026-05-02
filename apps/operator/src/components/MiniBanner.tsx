@@ -9,13 +9,14 @@ interface Props {
 
 /**
  * Small Lottie-rendered flag banner for the operator's LivePreview.
- * Same content as Display 2's Banner, sized for the preview tile.
- * If NOC has no resolved flag, falls back to a neutral placeholder.
+ * Banner width matches the slot; height adapts to the flag's native
+ * aspect ratio so each flag renders at its true shape.
  */
 export function MiniBanner({ noc, heightPct }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const animRef = useRef<AnimationItem | null>(null)
   const [hasFlag, setHasFlag] = useState(false)
+  const [aspectRatio, setAspectRatio] = useState<string>('2 / 3')
 
   useEffect(() => {
     if (!ref.current) return
@@ -23,6 +24,7 @@ export function MiniBanner({ noc, heightPct }: Props) {
     animRef.current?.destroy()
     animRef.current = null
     setHasFlag(false)
+    setAspectRatio('2 / 3')
 
     if (noc.length !== 3) return
 
@@ -30,6 +32,10 @@ export function MiniBanner({ noc, heightPct }: Props) {
       if (cancelled || !r.flagPath || !ref.current) return
       api.assets.readFlagJson(r.flagPath).then(data => {
         if (cancelled || !ref.current) return
+        const d = data as { w?: number; h?: number }
+        if (typeof d.w === 'number' && typeof d.h === 'number' && d.w > 0 && d.h > 0) {
+          setAspectRatio(`${d.w} / ${d.h}`)
+        }
         animRef.current = lottie.loadAnimation({
           container: ref.current,
           renderer: 'svg',
@@ -57,7 +63,7 @@ export function MiniBanner({ noc, heightPct }: Props) {
 
   return (
     <div className="mini-banner-slot" style={{ height: `${heightPct}%` }}>
-      <div ref={ref} className={`mini-banner${hasFlag ? '' : ' empty'}`} />
+      <div ref={ref} className={`mini-banner${hasFlag ? '' : ' empty'}`} style={{ aspectRatio }} />
     </div>
   )
 }

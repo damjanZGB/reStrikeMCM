@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import lottie, { type AnimationItem } from 'lottie-web'
 import { api } from '../ipc-bridge.js'
 
@@ -12,9 +12,9 @@ interface Props {
 function forceSvgFill(container: HTMLDivElement | null): void {
   const svg = container?.querySelector('svg')
   if (!svg) return
-  // Strip Lottie's width/height attrs (set to source canvas size) so our
-  // 100%/100% CSS rule wins. Use `meet` to preserve the flag's native
-  // aspect ratio inside the banner — never crop or stretch the artwork.
+  // Strip Lottie's width/height attrs so the CSS 100%/100% rule wins. Use
+  // `meet` (default) — banner aspect is set per-flag below so meet doesn't
+  // letterbox in practice, but it's the safe choice if anything mismatches.
   svg.removeAttribute('width')
   svg.removeAttribute('height')
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
@@ -24,6 +24,7 @@ function forceSvgFill(container: HTMLDivElement | null): void {
 export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEnabled }: Props) {
   const lottieRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<AnimationItem | null>(null)
+  const [aspectRatio, setAspectRatio] = useState<string>('2 / 3')
 
   useEffect(() => {
     if (!lottieRef.current) return
@@ -31,6 +32,12 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
     api.assets.readFlagJson(flagJsonPath)
       .then(data => {
         if (cancelled || !lottieRef.current) return
+        // Pick aspect-ratio from the source canvas so the banner height
+        // adapts to THIS flag's natural shape — no letterbox, no crop.
+        const d = data as { w?: number; h?: number }
+        if (typeof d.w === 'number' && typeof d.h === 'number' && d.w > 0 && d.h > 0) {
+          setAspectRatio(`${d.w} / ${d.h}`)
+        }
         const anim = lottie.loadAnimation({
           container: lottieRef.current,
           renderer: 'svg',
@@ -40,10 +47,6 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
           rendererSettings: { preserveAspectRatio: 'xMidYMid meet' },
         })
         animRef.current = anim
-        // Lottie creates the SVG synchronously but the inner <image> base64
-        // asset finishes decoding asynchronously — by which point Lottie has
-        // re-set width/height attributes to the asset's native size. Override
-        // both immediately AND after DOMLoaded fires.
         forceSvgFill(lottieRef.current)
         anim.addEventListener('DOMLoaded', () => forceSvgFill(lottieRef.current))
       })
@@ -51,8 +54,6 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
     return () => { cancelled = true; animRef.current?.destroy(); animRef.current = null }
   }, [flagJsonPath])
 
-  // Rise transform: at riseProgress=0, banner sits at translateY(120%) — off-screen below.
-  // At riseProgress=1, translateY(0) — anchored at slot bottom.
   const translateY = (1 - riseProgress) * 120
   const slotHeightPct = targetFraction * 100
 
@@ -61,7 +62,7 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
       <div
         ref={lottieRef}
         className="banner"
-        style={{ transform: `translateY(${translateY}%)` }}
+        style={{ transform: `translateY(${translateY}%)`, aspectRatio }}
       />
     </div>
   )
