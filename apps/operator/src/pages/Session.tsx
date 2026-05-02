@@ -10,6 +10,7 @@ import { LivePreview } from '../components/LivePreview.js'
 import { DisplayOptionsPanel } from '../components/DisplayOptionsPanel.js'
 import { PlayBar } from '../components/PlayBar.js'
 import { SettingsDialog } from './SettingsDialog.js'
+import { SessionLoader } from './SessionLoader.js'
 import { ToastList, type Toast } from '../components/Toast.js'
 
 function makeCeremony(config: AppConfig): Ceremony {
@@ -35,10 +36,11 @@ function makeCeremony(config: AppConfig): Ceremony {
 
 export function Session() {
   const { config } = useConfig()
-  const { session, createNew, update } = useSession()
+  const { session, createNew, load, update } = useSession()
   const [activeId, setActiveId] = useState<string | null>(null)
   const [audioInfo, setAudioInfo] = useState<{ filename: string; durationMs: number } | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [loaderOpen, setLoaderOpen] = useState(false)
   const [toasts, setToasts] = useState<Toast[]>([])
 
   const showToast = (kind: Toast['kind'], message: string) => {
@@ -102,6 +104,7 @@ export function Session() {
         <strong>reStrike MCM</strong>
         <span className="session-label">{session.label}</span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+          <button className="btn-secondary" onClick={() => setLoaderOpen(true)}>📂 Load session</button>
           <button className="btn-secondary" onClick={() => setSettingsOpen(true)}>⚙ Settings</button>
           <button className="btn-secondary" onClick={() => api.display.push()}>📺 Push to Display 2</button>
         </div>
@@ -132,6 +135,11 @@ export function Session() {
         onPlay={handlePlay} onReset={handleReset} onStop={handleStop}
       />
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SessionLoader
+        open={loaderOpen}
+        onClose={() => setLoaderOpen(false)}
+        onLoad={async id => { await load(id); setActiveId(null) }}
+      />
       <ToastList toasts={toasts} onDismiss={dismissToast} />
     </>
   )
