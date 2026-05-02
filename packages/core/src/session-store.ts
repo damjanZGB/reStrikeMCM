@@ -13,6 +13,11 @@ export async function loadSession(sessionsDir: string, sessionId: string): Promi
   return SessionSchema.parse(JSON.parse(raw))
 }
 
+export async function deleteSession(sessionsDir: string, sessionId: string): Promise<void> {
+  const { unlink } = await import('node:fs/promises')
+  await unlink(join(sessionsDir, `${sessionId}.json`))
+}
+
 export async function listSessions(sessionsDir: string): Promise<Session[]> {
   try {
     const files = await readdir(sessionsDir)

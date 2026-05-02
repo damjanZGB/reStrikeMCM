@@ -6,6 +6,7 @@ export interface IpcContract {
   'session:list': { req: void; res: Session[] }
   'session:load': { req: string; res: Session }
   'session:save': { req: Session; res: void }
+  'session:delete': { req: string; res: void }
   'assets:resolve-noc': { req: string; res: { anthemPath: string|null; flagPath: string|null } }
   'assets:audio-duration': { req: string; res: { durationMs: number } }
   'assets:read-flag-json': { req: string; res: unknown }

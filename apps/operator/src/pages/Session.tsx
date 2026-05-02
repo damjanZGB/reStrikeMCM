@@ -97,6 +97,11 @@ export function Session() {
     setActiveId(c.id)
   }
 
+  const deleteCeremony = (id: string) => {
+    update(s => ({ ...s, ceremonies: s.ceremonies.filter(c => c.id !== id) }))
+    if (activeId === id) setActiveId(null)
+  }
+
   const updateActive = (next: Ceremony) => {
     const status = deriveCeremonyStatus(next.status, next.athletes)
     update(s => ({ ...s, ceremonies: s.ceremonies.map(c => c.id === next.id ? { ...next, status } : c) }))
@@ -146,7 +151,7 @@ export function Session() {
         </div>
       </header>
       <main className="session-layout">
-        <QueuePanel ceremonies={session.ceremonies} activeId={activeId} onSelect={setActiveId} onAdd={addCeremony} />
+        <QueuePanel ceremonies={session.ceremonies} activeId={activeId} onSelect={setActiveId} onAdd={addCeremony} onDelete={deleteCeremony} />
         <section className="editor-col">
           {active ? (
             <>
@@ -175,6 +180,7 @@ export function Session() {
         open={loaderOpen}
         onClose={() => setLoaderOpen(false)}
         onLoad={async id => { await load(id); setActiveId(null) }}
+        activeSessionId={session?.id}
       />
       <ToastList toasts={toasts} onDismiss={dismissToast} />
     </>

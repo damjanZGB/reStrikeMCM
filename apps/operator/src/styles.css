@@ -25,10 +25,14 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 
 .queue-panel { width: 240px; padding: 14px; border-right: 1px solid #2a2a3a; overflow-y: auto; }
 .queue-panel h4 { font-size: 0.7rem; color: #888; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 10px; }
-.queue-item { display: block; width: 100%; text-align: left; background: #1a1a2e; border: 0; border-left: 2px solid transparent; border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; color: #ddd; font-size: 0.78rem; cursor: pointer; }
-.queue-item.active { background: #252540; border-left-color: gold; }
-.queue-item.done { opacity: 0.5; border-left-color: #2ecc71; }
+.queue-item-row { display: flex; gap: 4px; margin-bottom: 6px; border-left: 2px solid transparent; border-radius: 4px; }
+.queue-item-row.active { border-left-color: gold; }
+.queue-item-row.done { opacity: 0.5; border-left-color: #2ecc71; }
+.queue-item-row.active .queue-item { background: #252540; }
+.queue-item { display: block; flex: 1; text-align: left; background: #1a1a2e; border: 0; border-radius: 0 4px 4px 0; padding: 8px 10px; color: #ddd; font-size: 0.78rem; cursor: pointer; min-width: 0; }
 .queue-item .qi-meta { color: #888; font-size: 0.66rem; margin-top: 2px; }
+.qi-delete { background: transparent; border: 1px solid #2a2a3a; color: #888; padding: 0 8px; border-radius: 3px; cursor: pointer; font-size: 0.85rem; }
+.qi-delete:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
 .btn-primary { background: gold; color: #000; padding: 10px 24px; border: 0; border-radius: 4px; font-weight: 700; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-secondary { background: #252540; color: #fff; padding: 6px 14px; border: 0; border-radius: 4px; cursor: pointer; }
@@ -38,10 +42,10 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .lp-title { position: absolute; top: 8%; left: 0; right: 0; text-align: center; color: #aaa; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
 .lp-event { position: absolute; top: 14%; left: 0; right: 0; text-align: center; color: gold; font-size: 0.85rem; font-weight: 700; }
 .lp-stage { position: absolute; left: 0; right: 0; bottom: 0; height: 70%; display: flex; align-items: flex-end; justify-content: center; gap: 5%; padding: 0 10% 4%; }
-.lp-col { flex: 1; min-width: 0; max-width: 14%; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.lp-col { flex: 1; min-width: 0; max-width: 14%; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; overflow: hidden; }
 .mini-banner-slot { width: 100%; display: flex; align-items: flex-end; }
-.mini-banner { width: 100%; height: 100%; background: transparent; box-shadow: 0 2px 6px #0006; border-radius: 1px; overflow: hidden; }
-.mini-banner-slot { width: 100%; flex: 1; min-height: 0; }
+.mini-banner { width: 100%; flex-shrink: 0; background: transparent; box-shadow: 0 2px 6px #0006; border-radius: 1px; overflow: hidden; }
+.mini-banner-slot { width: 100%; display: flex; flex-direction: column; justify-content: flex-start; }
 .mini-banner.empty { background: linear-gradient(180deg, #2a2a3a, #1a1a2e); border: 1px dashed #3a3a4a; }
 .mini-banner svg { width: 100%; height: 100%; display: block; }
 .display-options { width: 280px; padding: 14px; border-left: 1px solid #2a2a3a; overflow-y: auto; }
@@ -94,8 +98,10 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 @keyframes toast-slide { from { opacity: 0; transform: translateX(20px) } to { opacity: 1; transform: translateX(0) } }
 
 .session-list { list-style: none; padding: 0; margin: 0; }
-.session-list li { margin-bottom: 6px; }
-.session-row { width: 100%; text-align: left; background: #1a1a2e; border: 1px solid #2a2a3a; border-radius: 4px; padding: 10px 12px; cursor: pointer; color: #ddd; }
+.session-li { display: flex; gap: 6px; margin-bottom: 6px; }
+.session-row { flex: 1; text-align: left; background: #1a1a2e; border: 1px solid #2a2a3a; border-radius: 4px; padding: 10px 12px; cursor: pointer; color: #ddd; }
 .session-row:hover { background: #252540; border-color: gold; }
+.session-delete { padding: 0 12px; font-size: 1rem; cursor: pointer; }
+.session-delete:disabled { opacity: 0.4; cursor: not-allowed; }
 .sr-label { font-size: 0.9rem; font-weight: 600; }
 .sr-meta { font-size: 0.7rem; color: #888; margin-top: 4px; }

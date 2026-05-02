@@ -9,6 +9,7 @@ const api = {
     list: () => ipcRenderer.invoke('session:list'),
     load: (id: string) => ipcRenderer.invoke('session:load', id),
     save: (s: any) => ipcRenderer.invoke('session:save', s),
+    delete: (id: string) => ipcRenderer.invoke('session:delete', id),
   },
   assets: {
     resolveNoc: (noc: string) => ipcRenderer.invoke('assets:resolve-noc', noc),
