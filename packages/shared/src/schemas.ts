@@ -92,4 +92,5 @@ export const AppConfigSchema = z.object({
     silverHeightPct: z.number().min(30).max(100),
     bronzeHeightPct: z.number().min(30).max(100),
   }),
+  flagHoldMs: z.number().min(0).max(60000).default(5000),
 })

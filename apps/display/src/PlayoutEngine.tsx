@@ -109,6 +109,21 @@ export function PlayoutEngine({ instruction }: Props) {
   // Forward phase changes to operator
   useEffect(() => { api.ceremony.emitPhaseChange({ phase, t }) }, [phase])
 
+  // After the anthem ends, hold the flags for flagHoldMs, then start a 500ms
+  // CSS opacity fade, then settle to idle (banners unmounted, backdrop stays).
+  useEffect(() => {
+    if (!instruction) return
+    if (phase === 'ended') {
+      const holdMs = instruction.config.flagHoldMs
+      const t1 = setTimeout(() => setPhase('flag-fade'), holdMs)
+      return () => clearTimeout(t1)
+    }
+    if (phase === 'flag-fade') {
+      const t2 = setTimeout(() => setPhase('idle'), 500)
+      return () => clearTimeout(t2)
+    }
+  }, [phase, instruction])
+
   if (!instruction) return <div className="display-root" />
 
   const { ceremony, resolvedAssets } = instruction
@@ -150,8 +165,9 @@ export function PlayoutEngine({ instruction }: Props) {
 
       {bannerVisible && (() => {
         const titleStyles = buildTitleStyles(instruction.config.title)
+        const fadingClass = phase === 'flag-fade' ? ' flag-fading' : ''
         return (
-        <>
+        <div className={`playout-content${fadingClass}`}>
           {textsEnabled && (
             <>
               <div className="title-overlay">
@@ -190,7 +206,7 @@ export function PlayoutEngine({ instruction }: Props) {
               )
             })}
           </div>
-        </>
+        </div>
         )
       })()}
     </div>

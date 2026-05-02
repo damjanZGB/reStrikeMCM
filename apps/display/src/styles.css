@@ -75,6 +75,12 @@ html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; backg
 .badge-silver { background: silver; color: #000; }
 .badge-bronze { background: #cd7f32; color: #fff; }
 
+/* Wrapper for everything that fades together at the end of a ceremony
+   (title-overlay, display-title, banner-stage). The backdrop is OUTSIDE
+   this wrapper so it stays visible across ceremonies. */
+.playout-content { position: absolute; inset: 0; transition: opacity 500ms ease; }
+.playout-content.flag-fading { opacity: 0; }
+
 .title-card-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; gap: 1.5vw; animation: fadeIn 600ms ease forwards; }
 .title-card-overlay .cat { font-size: 1.5vw; letter-spacing: 0.2em; color: #aaa; text-transform: uppercase; }
 .title-card-overlay .event { font-size: 4vw; font-weight: 700; color: gold; }

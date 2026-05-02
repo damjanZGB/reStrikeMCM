@@ -8,11 +8,12 @@ describe('isBannerVisible', () => {
     expect(isBannerVisible('title-card')).toBe(false)
   })
 
-  it('shows from rising through ended', () => {
+  it('shows from rising through flag-fade', () => {
     expect(isBannerVisible('rising')).toBe(true)
     expect(isBannerVisible('holding')).toBe(true)
     expect(isBannerVisible('fading-out')).toBe(true)
     expect(isBannerVisible('ended')).toBe(true)
+    expect(isBannerVisible('flag-fade')).toBe(true)
   })
 })
 

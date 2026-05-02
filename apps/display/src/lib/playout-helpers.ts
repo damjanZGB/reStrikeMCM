@@ -1,8 +1,9 @@
 import type { NamesMode, PlayoutPhase, PlayoutInstruction, Rank, PodiumHeights } from '@restrike-mcm/shared'
 
-/** Banner stack is visible whenever banners are physically on screen. */
+/** Banner stack is visible whenever banners are physically on screen.
+ *  flag-fade keeps them rendered so the CSS opacity transition can play. */
 export function isBannerVisible(phase: PlayoutPhase): boolean {
-  return phase === 'rising' || phase === 'holding' || phase === 'fading-out' || phase === 'ended'
+  return phase === 'rising' || phase === 'holding' || phase === 'fading-out' || phase === 'ended' || phase === 'flag-fade'
 }
 
 /** When to show the name tag under a banner — depends on the chosen namesMode + phase. */

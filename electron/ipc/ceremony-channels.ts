@@ -39,6 +39,7 @@ async function buildPlayoutInstruction(ceremony: Ceremony): Promise<PlayoutInstr
       title: config.title,
       audio: config.audio,
       podium: config.podium,
+      flagHoldMs: config.flagHoldMs,
     },
   }
 }

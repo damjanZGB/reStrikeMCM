@@ -169,6 +169,13 @@ export function SettingsDialog({ open, onClose }: Props) {
           </div>
 
           <div className="settings-section">
+            <h5>Flag hold time after anthem (seconds)</h5>
+            <input type="number" min={0} max={60} step={0.5}
+              value={config.flagHoldMs / 1000}
+              onChange={e => set('flagHoldMs', Math.max(0, Math.round((parseFloat(e.target.value) || 0) * 1000)))} />
+          </div>
+
+          <div className="settings-section">
             <h5>Podium heights (%)</h5>
             <div className="grid-3">
               <label>Gold<input type="number" min={30} max={100} value={config.podium.goldHeightPct}

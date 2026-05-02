@@ -93,6 +93,7 @@ export interface AppConfig {
   }
   audio: { fadeOutMs: number }
   podium: PodiumHeights
+  flagHoldMs: number          // ms flags remain visible after anthem ends, before fading out
 }
 
 export interface PlayoutInstruction {
@@ -103,7 +104,7 @@ export interface PlayoutInstruction {
     backgroundPath: string
   }
   anthemDurationMs: number
-  config: Pick<AppConfig, 'rankLabels' | 'title' | 'audio' | 'podium'>
+  config: Pick<AppConfig, 'rankLabels' | 'title' | 'audio' | 'podium' | 'flagHoldMs'>
 }
 
-export type PlayoutPhase = 'idle' | 'title-card' | 'rising' | 'holding' | 'fading-out' | 'ended'
+export type PlayoutPhase = 'idle' | 'title-card' | 'rising' | 'holding' | 'fading-out' | 'ended' | 'flag-fade'
