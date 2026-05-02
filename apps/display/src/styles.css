@@ -41,16 +41,14 @@ html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; backg
    different banner top edges since aspect-ratio amplifies width into height. */
 .banner-col { flex: 1; min-width: 0; max-width: 18%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
 .banner-slot { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
-/* Width is fixed (slot width = same for all four cols); aspect-ratio is set
-   inline per banner from the flag JSON's native w/h. Each flag therefore
-   renders at its true aspect with NO letterboxing and NO cropping — banner
-   height varies per flag, all banners share width.
-
-   flex-shrink: 0 is critical: without it, the parent flex column shrinks
-   the banner when its computed height exceeds the slot height, which then
-   forces width to shrink too (to keep aspect-ratio honored) — the bug
-   where bronzes ended up smaller overall instead of just shorter. */
-.banner { width: 100%; aspect-ratio: 2 / 3; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.6); transition: transform 0ms; overflow: hidden; position: relative; z-index: 1; }
+/* Banner dimensions are slot-driven: width 100% (same for all four cols
+   since they're flex:1) and height 100% of the slot (varies per rank for
+   the podium effect — gold tallest, bronze shortest, bronze1 = bronze2).
+   No aspect-ratio constraint — banner shape is whatever the slot dictates.
+   The flag inside uses preserveAspectRatio: meet, so each flag renders at
+   its TRUE native aspect, letterboxing inside the banner if its shape
+   differs from the slot's shape. Flag is never cropped, never distorted. */
+.banner { width: 100%; height: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.6); transition: transform 0ms; overflow: hidden; position: relative; z-index: 1; }
 .banner svg { width: 100% !important; height: 100% !important; display: block !important; }
 .banner-slot.gold-tint::before {
   /* Glow halo behind the banner — sits at the banner's footprint and bleeds outward.
