@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { resolveAnthemFor, resolveFlagFor, readMp3Duration, loadConfig } from '@restrike-mcm/core'
 import type { Ceremony, PlayoutInstruction } from '@restrike-mcm/shared'
 import { ASSETS_ROOT, CONFIG_PATH, DEFAULT_CONFIG_PATH } from '../paths.js'
-import { getDisplayWindow, getOperatorWindow } from '../windows.js'
+import { getDisplayWindow, getOperatorWindow, createDisplayWindow, loadDisplayContent } from '../windows.js'
 
 async function buildPlayoutInstruction(ceremony: Ceremony): Promise<PlayoutInstruction> {
   const config = await loadConfig(CONFIG_PATH, DEFAULT_CONFIG_PATH)
@@ -45,9 +45,19 @@ async function buildPlayoutInstruction(ceremony: Ceremony): Promise<PlayoutInstr
 
 export function registerCeremonyChannels() {
   ipcMain.handle('ceremony:play', async (_e, ceremony: Ceremony) => {
-    const display = getDisplayWindow()
-    if (!display) throw new Error('Display window is not active. Push to Display 2 first.')
+    let display = getDisplayWindow()
+    let createdNow = false
+    // Auto-create a display window if none is active. Falls back to display 1
+    // (windowed) on single-monitor setups; full screen on display 2 otherwise.
+    if (!display) {
+      display = createDisplayWindow()
+      await loadDisplayContent(display)
+      createdNow = true
+    }
     const instruction = await buildPlayoutInstruction(ceremony)
+    // When we just created the window, give the renderer a moment to mount React
+    // and register its onPlay listener before we send the instruction.
+    if (createdNow) await new Promise<void>(r => setTimeout(r, 250))
     display.webContents.send('ceremony:play', instruction)
   })
   ipcMain.handle('ceremony:stop', () => { getDisplayWindow()?.webContents.send('ceremony:stop') })

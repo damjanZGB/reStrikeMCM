@@ -8,6 +8,7 @@ export interface OperatorApi {
   assets: {
     resolveNoc(noc: string): Promise<{ anthemPath: string|null; flagPath: string|null }>
     audioDuration(path: string): Promise<{ durationMs: number }>
+    readFlagJson(path: string): Promise<unknown>
     onAssetsChanged(cb: () => void): () => void
   }
   display: {

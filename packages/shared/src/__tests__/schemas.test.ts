@@ -38,6 +38,18 @@ describe('AthleteSchema', () => {
     const ok = { rank: 'gold', name: '', noc: '', status: 'empty' } as const
     expect(() => AthleteSchema.parse(ok)).not.toThrow()
   })
+
+  it('accepts partial NOC (mid-typing) — 1 or 2 letters', () => {
+    const one = { rank: 'gold', name: '', noc: 'U', status: 'empty' } as const
+    const two = { rank: 'gold', name: '', noc: 'UZ', status: 'empty' } as const
+    expect(() => AthleteSchema.parse(one)).not.toThrow()
+    expect(() => AthleteSchema.parse(two)).not.toThrow()
+  })
+
+  it('rejects 4+ letter NOC', () => {
+    const bad = { rank: 'gold', name: '', noc: 'UZBE', status: 'empty' } as const
+    expect(() => AthleteSchema.parse(bad)).toThrow()
+  })
 })
 
 describe('CeremonySchema', () => {

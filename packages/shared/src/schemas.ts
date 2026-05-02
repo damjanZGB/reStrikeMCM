@@ -12,7 +12,7 @@ export const EasingSchema = z.enum(['linear', 'easeOutCubic', 'easeInOutCubic'])
 export const AthleteSchema = z.object({
   rank: RankSchema,
   name: z.string(),
-  noc: z.string().regex(/^[A-Z]{3}$|^$/, 'NOC must be empty or 3 uppercase letters'),
+  noc: z.string().regex(/^[A-Z]{0,3}$/, 'NOC must be 0–3 uppercase letters'),
   status: AthleteStatusSchema,
   anthemOverride: z.string().optional(),
   flagOverride: z.string().optional(),
