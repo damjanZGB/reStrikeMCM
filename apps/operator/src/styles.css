@@ -50,3 +50,7 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .audio-block.muted { color: #888; }
 .play-bar { display: flex; gap: 8px; padding: 14px; background: #13131e; border-top: 1px solid #2a2a3a; align-items: center; }
 .duration-pill { background: #1a1a2e; color: #ccc; padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; margin-left: auto; }
+
+.session-layout { display: grid; grid-template-columns: 240px 1fr 280px; flex: 1; min-height: 0; overflow: hidden; }
+.editor-col { padding: 14px; overflow-y: auto; }
+.empty-state { padding: 40px; color: #888; text-align: center; }
