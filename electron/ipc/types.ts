@@ -1,4 +1,4 @@
-import type { AppConfig, Session, PlayoutInstruction, PlayoutPhase } from '@restrike-mcm/shared'
+import type { AppConfig, Ceremony, Session, PlayoutPhase } from '@restrike-mcm/shared'
 
 export interface IpcContract {
   'config:get': { req: void; res: AppConfig }
@@ -10,7 +10,7 @@ export interface IpcContract {
   'assets:audio-duration': { req: string; res: { durationMs: number } }
   'display:push': { req: void; res: { ok: boolean; reason?: string } }
   'display:reset': { req: void; res: void }
-  'ceremony:play': { req: PlayoutInstruction; res: void }
+  'ceremony:play': { req: Ceremony; res: void }
   'ceremony:stop': { req: void; res: void }
   'ceremony:phase-change': { req: { phase: PlayoutPhase; t: number }; res: void }
 }

@@ -72,11 +72,12 @@ export function Session() {
   }
 
   const handlePlay = async () => {
-    if (!active || !audioInfo) return
-    // Build PlayoutInstruction in main; for now request a play via ceremony channel.
-    // The main process resolves assets + builds instruction.
-    // (Wired in Task 19 — for now this is a no-op stub.)
-    console.log('play requested for', active.id)
+    if (!active) return
+    try {
+      await api.ceremony.play(active as any)  // main constructs PlayoutInstruction
+    } catch (err) {
+      alert(`Cannot play ceremony: ${err}`)
+    }
   }
 
   const handleReset = () => {
