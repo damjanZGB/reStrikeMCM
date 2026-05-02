@@ -4,3 +4,15 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .titlebar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #13131e; border-bottom: 1px solid #2a2a3a; }
 .session-label { color: #888; }
 .loading { padding: 20px; color: #888; }
+
+.athlete-row { display: grid; grid-template-columns: 36px 1fr 90px 26px; gap: 6px; align-items: center; padding: 6px 8px; margin-bottom: 6px; background: #1a1a2e; border: 1px solid #2a2a3a; border-radius: 4px; }
+.athlete-row.gold { border-left: 3px solid gold; }
+.athlete-row.silver { border-left: 3px solid silver; }
+.athlete-row.bronze { border-left: 3px solid #cd7f32; }
+.athlete-row.optional { border-style: dashed; }
+.athlete-row .pos { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; color: #aaa; text-align: center; }
+.athlete-row input { background: #0a0a14; color: #fff; border: 1px solid #2a2a3a; padding: 5px 7px; border-radius: 3px; font-size: 0.85rem; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 auto; }
+.status-ok { background: #2ecc71; }
+.status-warn { background: #f39c12; }
+.status-empty { background: #444; }
