@@ -40,6 +40,7 @@ export interface CeremonyDisplayOptions {
   riseCurve: RiseCurve
   namesMode: NamesMode
   goldTint: boolean
+  textsEnabled: boolean
   backgroundOverride?: string | undefined
 }
 

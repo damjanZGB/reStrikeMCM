@@ -71,7 +71,7 @@ describe('updatedCeremony', () => {
   const base = {
     id: 'x', category: 'M', ageCategory: 'Senior', discipline: 'Kyorugi',
     gender: 'M' as const, bronzeCount: 1 as const, athletes: baseAthletes,
-    display: { rankLabelStyle: 'position' as const, riseCurve: 'rise-hold' as const, namesMode: 'title-card' as const, goldTint: false },
+    display: { rankLabelStyle: 'position' as const, riseCurve: 'rise-hold' as const, namesMode: 'title-card' as const, goldTint: false, textsEnabled: true },
     status: 'empty' as const,
   }
 

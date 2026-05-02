@@ -65,6 +65,7 @@ export function PlayoutEngine({ instruction }: Props) {
   useEffect(() => {
     if (!instruction) { reset(); return }
     const namesMode = instruction.ceremony.display.namesMode
+    const textsEnabled = instruction.ceremony.display.textsEnabled !== false
     const totalMs = instruction.anthemDurationMs
     const fadeOutMs = instruction.config.audio.fadeOutMs
     const curve = instruction.ceremony.display.riseCurve
@@ -93,7 +94,9 @@ export function PlayoutEngine({ instruction }: Props) {
       rafRef.current = requestAnimationFrame(tick)
     }
 
-    if (namesMode === 'title-card') {
+    // Skip the title-card phase entirely when texts are disabled —
+    // otherwise the user gets 3 seconds of empty backdrop with nothing on it.
+    if (namesMode === 'title-card' && textsEnabled) {
       setPhase('title-card')
       const tcTimer = setTimeout(startRise, 3000)
       return () => { clearTimeout(tcTimer); reset() }
@@ -113,7 +116,8 @@ export function PlayoutEngine({ instruction }: Props) {
     ? ['silver', 'gold', 'bronze1', 'bronze2']
     : ['silver', 'gold', 'bronze1']
 
-  const showNames = shouldShowNames(ceremony.display.namesMode, phase)
+  const textsEnabled = ceremony.display.textsEnabled !== false
+  const showNames = textsEnabled && shouldShowNames(ceremony.display.namesMode, phase)
   const bannerVisible = isBannerVisible(phase)
 
   // All banners share the same rise progress (simultaneous rise)
@@ -126,7 +130,7 @@ export function PlayoutEngine({ instruction }: Props) {
     <div className="display-root">
       <div className="backdrop show" style={{ backgroundImage: `url("${toFileUrl(resolvedAssets.backgroundPath)}")` }} />
 
-      {phase === 'title-card' && (
+      {phase === 'title-card' && textsEnabled && (
         <div className="title-card-overlay">
           <div className="cat">{ceremony.category} · {ceremony.ageCategory} · {ceremony.discipline}</div>
           <div className="event" style={{ color: instruction.config.title.color }}>{instruction.config.title.text}</div>
@@ -148,17 +152,21 @@ export function PlayoutEngine({ instruction }: Props) {
         const titleStyles = buildTitleStyles(instruction.config.title)
         return (
         <>
-          <div className="title-overlay">
-            <div className="cat">{ceremony.category} · {ceremony.ageCategory} · {ceremony.discipline}</div>
-          </div>
-          <div className="display-title" style={titleStyles.wrapper}>
-            <span
-              key={`anim-${instruction.config.title.animation}-${ceremony.id}`}
-              className={`title-anim title-anim-${instruction.config.title.animation}`}
-              style={titleStyles.text}>
-              {instruction.config.title.text}
-            </span>
-          </div>
+          {textsEnabled && (
+            <>
+              <div className="title-overlay">
+                <div className="cat">{ceremony.category} · {ceremony.ageCategory} · {ceremony.discipline}</div>
+              </div>
+              <div className="display-title" style={titleStyles.wrapper}>
+                <span
+                  key={`anim-${instruction.config.title.animation}-${ceremony.id}`}
+                  className={`title-anim title-anim-${instruction.config.title.animation}`}
+                  style={titleStyles.text}>
+                  {instruction.config.title.text}
+                </span>
+              </div>
+            </>
+          )}
           <div className="banner-stage">
             {orderedRanks.map(r => {
               const a = ceremony.athletes.find(x => x.rank === r)!

@@ -41,6 +41,7 @@ export const CeremonyDisplayOptionsSchema = z.object({
   riseCurve: RiseCurveSchema,
   namesMode: NamesModeSchema,
   goldTint: z.boolean(),
+  textsEnabled: z.boolean().default(true),
   backgroundOverride: z.string().optional(),
 })
 

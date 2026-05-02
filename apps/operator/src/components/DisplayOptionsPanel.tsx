@@ -76,6 +76,10 @@ export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
         <input type="checkbox" checked={display.goldTint} onChange={e => set('goldTint', e.target.checked)} />
       </label>
 
+      <label className="toggle-row">Disable all texts and titles
+        <input type="checkbox" checked={!display.textsEnabled} onChange={e => set('textsEnabled', !e.target.checked)} />
+      </label>
+
       <h4>Background</h4>
       <div className="bg-row">
         <span className="bg-current">

@@ -30,6 +30,7 @@ function makeCeremony(config: AppConfig): Ceremony {
       riseCurve:      config.defaults.riseCurve,
       namesMode:      config.defaults.namesMode,
       goldTint:       config.defaults.goldTint,
+      textsEnabled:   true,
     },
     status: 'empty',
   }
