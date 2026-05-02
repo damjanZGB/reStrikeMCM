@@ -58,21 +58,21 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .editor-col { padding: 14px; overflow-y: auto; }
 .empty-state { padding: 40px; color: #888; text-align: center; }
 
-.modal-backdrop { position: fixed; inset: 0; background: #000c; display: flex; align-items: center; justify-content: center; z-index: 100; }
-.modal { background: #13131e; border: 1px solid #2a2a3a; border-radius: 6px; width: 720px; max-height: 80vh; overflow: auto; }
-.modal header { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #2a2a3a; }
+.modal-backdrop { position: fixed; inset: 0; background: #000c; display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal { background: #13131e; border: 1px solid #2a2a3a; border-radius: 6px; width: min(720px, 100%); max-height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.modal header { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #2a2a3a; flex-shrink: 0; }
 .modal h3 { margin: 0; }
-.modal-body { padding: 14px; }
+.modal-body { padding: 14px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
 .settings-section { margin-bottom: 18px; }
 .settings-section h5 { font-size: 0.78rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 8px; }
 .settings-list { list-style: none; padding: 0; margin: 0 0 8px; }
 .settings-list li { display: flex; gap: 6px; margin-bottom: 4px; }
-.settings-list input, .settings-add input { flex: 1; background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 6px 8px; border-radius: 3px; }
-.settings-list button, .settings-add button { background: #252540; color: #fff; border: 0; padding: 0 12px; border-radius: 3px; cursor: pointer; }
+.settings-list input, .settings-add input { flex: 1; min-width: 0; background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 6px 8px; border-radius: 3px; }
+.settings-list button, .settings-add button { background: #252540; color: #fff; border: 0; padding: 0 12px; border-radius: 3px; cursor: pointer; flex-shrink: 0; min-width: 36px; }
 .settings-add { display: flex; gap: 6px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
-.grid-3 input, .grid-4 input { background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 6px 8px; border-radius: 3px; }
+.grid-3 input, .grid-4 input { min-width: 0; background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 6px 8px; border-radius: 3px; }
 .grid-3 label { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; color: #aaa; }
 
 .substitute-row { grid-column: 1 / -1; padding: 4px 0 0 36px; display: flex; gap: 6px; }

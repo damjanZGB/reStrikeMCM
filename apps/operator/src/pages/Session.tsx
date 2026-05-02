@@ -54,8 +54,24 @@ export function Session() {
     return api.display.onLost(() => showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.'))
   }, [])
 
-  // create a default session if none exists
-  useEffect(() => { if (!session) createNew(`Session ${new Date().toLocaleDateString()}`) }, [session, createNew])
+  // On startup, prefer the most recently updated saved session;
+  // fall back to creating a new one if there are none.
+  useEffect(() => {
+    if (session) return
+    let cancelled = false
+    api.session.list()
+      .then(list => {
+        if (cancelled || session) return
+        if (list.length > 0) {
+          const latest = list.slice().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0]!
+          load(latest.id).catch(() => createNew(`Session ${new Date().toLocaleDateString()}`))
+        } else {
+          createNew(`Session ${new Date().toLocaleDateString()}`)
+        }
+      })
+      .catch(() => createNew(`Session ${new Date().toLocaleDateString()}`))
+    return () => { cancelled = true }
+  }, [session, createNew, load])
 
   const active = session?.ceremonies.find(c => c.id === activeId) ?? null
 
