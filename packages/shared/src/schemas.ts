@@ -80,6 +80,7 @@ export const AppConfigSchema = z.object({
   }),
   title: CeremonyTitleSchema,
   defaultBackground: z.string(),
+  defaultBackgroundCustomPath: z.string().optional(),
   defaults: z.object({
     riseCurve: RiseCurveSchema,
     namesMode: NamesModeSchema,

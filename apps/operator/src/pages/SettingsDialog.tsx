@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import type { AppConfig, CeremonyTitle, TitleAnimation, HorizontalAlign, VerticalAlign } from '@restrike-mcm/shared'
 import { useConfig } from '../hooks/useConfig.js'
+import { api } from '../ipc-bridge.js'
+
+const shortName = (p: string) => p.split(/[\\/]/).pop() ?? p
 
 const FONT_FAMILIES = [
   { value: 'system-ui, -apple-system, sans-serif', label: 'System UI' },
@@ -44,6 +47,11 @@ export function SettingsDialog({ open, onClose }: Props) {
 
   const set = <K extends keyof AppConfig>(k: K, v: AppConfig[K]) => update({ [k]: v } as Partial<AppConfig>)
   const setTitle = (partial: Partial<CeremonyTitle>) => set('title', { ...config.title, ...partial })
+
+  const pickDefaultBackdrop = async () => {
+    const path = await api.fs.pickFile([{ name: 'Image', extensions: ['jpg', 'jpeg', 'png', 'webp'] }])
+    if (path) set('defaultBackgroundCustomPath', path)
+  }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -159,6 +167,25 @@ export function SettingsDialog({ open, onClose }: Props) {
                   value={config.title.y}
                   onChange={e => setTitle({ y: parseFloat(e.target.value) || 14 })} />
               </label>
+            </div>
+          </div>
+
+          <div className="settings-section">
+            <h5>Default backdrop image</h5>
+            <div className="bg-row">
+              <span className="bg-current">
+                {config.defaultBackgroundCustomPath
+                  ? `🖼️ ${shortName(config.defaultBackgroundCustomPath)}`
+                  : `Bundled: ${config.defaultBackground}`}
+              </span>
+              <div className="bg-actions">
+                <button className="btn-secondary" onClick={pickDefaultBackdrop}>Choose…</button>
+                {config.defaultBackgroundCustomPath && (
+                  <button className="btn-secondary" onClick={() => set('defaultBackgroundCustomPath', undefined)}>
+                    Reset to bundled
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 

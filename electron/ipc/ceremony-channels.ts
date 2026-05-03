@@ -23,7 +23,9 @@ async function buildPlayoutInstruction(ceremony: Ceremony): Promise<PlayoutInstr
   if (bronze2 && !bronze2Flag) throw new Error('Missing flag for bronze2')
 
   const anthemDurationMs = await readMp3Duration(goldAnthem)
+  // Background priority: per-ceremony override > global custom selection > bundled default.
   const backgroundPath = ceremony.display.backgroundOverride
+    ?? config.defaultBackgroundCustomPath
     ?? join(ASSETS_ROOT, 'backgrounds', config.defaultBackground)
 
   return {

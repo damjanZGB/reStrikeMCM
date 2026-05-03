@@ -84,7 +84,8 @@ export interface AppConfig {
   genders: string[]
   rankLabels: RankLabels
   title: CeremonyTitle
-  defaultBackground: string
+  defaultBackground: string                 // bundled fallback filename (resolved under assets/backgrounds/)
+  defaultBackgroundCustomPath?: string | undefined  // user-selected absolute path; overrides bundled default when set
   defaults: {
     riseCurve: RiseCurve
     namesMode: NamesMode

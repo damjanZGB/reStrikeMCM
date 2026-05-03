@@ -22,6 +22,8 @@ export function registerDisplayChannels() {
 
   ipcMain.handle('display:resolve-default-backdrop', async () => {
     const config = await loadConfig(CONFIG_PATH, DEFAULT_CONFIG_PATH)
-    return join(ASSETS_ROOT, 'backgrounds', config.defaultBackground)
+    // User-selected backdrop wins; bundled default only applies when nothing selected.
+    return config.defaultBackgroundCustomPath
+      ?? join(ASSETS_ROOT, 'backgrounds', config.defaultBackground)
   })
 }
