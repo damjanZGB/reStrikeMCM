@@ -17,8 +17,16 @@ directories:
   output: dist
 win:
   target:
-    - target: portable
+    - target: nsis
       arch: [x64]
-  artifactName: ${productName}-${version}-portable.exe
-portable:
-  artifactName: ${productName}-${version}-portable.exe
+  artifactName: ${productName}-${version}-Setup.exe
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  perMachine: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: reStrikeMCM
+  uninstallDisplayName: reStrikeMCM ${version}
+  artifactName: ${productName}-${version}-Setup.exe
