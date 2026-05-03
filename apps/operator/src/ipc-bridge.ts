@@ -25,6 +25,7 @@ export interface OperatorApi {
     play(c: Ceremony): Promise<void>
     stop(): Promise<void>
     onPhaseChange(cb: (e: { phase: PlayoutPhase; t: number }) => void): () => void
+    onShortcutPlay(cb: () => void): () => void
   }
   fs: { pickFile(filters: FileFilter[]): Promise<string | null> }
 }

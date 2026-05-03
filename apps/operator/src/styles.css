@@ -57,6 +57,9 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .bg-current { font-size: 0.78rem; color: #ccc; word-break: break-all; }
 .bg-actions { display: flex; gap: 6px; }
 .bg-actions .btn-secondary { padding: 4px 10px; font-size: 0.72rem; }
+.shortcut-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.shortcut-current { background: #1a1a2e; border: 1px solid #2a2a3a; padding: 6px 12px; border-radius: 4px; font-family: monospace; color: gold; min-width: 140px; text-align: center; }
+.shortcut-hint { color: #aaa; font-size: 0.78rem; font-style: italic; }
 .audio-actions { margin-top: 8px; }
 .audio-actions .btn-secondary { padding: 6px 12px; font-size: 0.78rem; width: 100%; }
 .audio-block { background: #1a1a2e; border-radius: 4px; padding: 8px 10px; font-size: 0.75rem; color: #ccc; }

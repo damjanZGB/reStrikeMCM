@@ -3,8 +3,10 @@ import { mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import chokidar from 'chokidar'
-import { ASSETS_ROOT, SESSIONS_ROOT } from './paths.js'
+import { loadConfig } from '@restrike-mcm/core'
+import { ASSETS_ROOT, CONFIG_PATH, DEFAULT_CONFIG_PATH, SESSIONS_ROOT } from './paths.js'
 import { createOperatorWindow, getOperatorWindow, getDisplayWindow, closeDisplayWindow } from './windows.js'
+import { setPlayShortcut, unregisterAllShortcuts } from './shortcut-manager.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 import { registerConfigChannels } from './ipc/config-channels.js'
@@ -50,6 +52,15 @@ async function bootstrap() {
     }
   })
 
+  // Global PLAY hotkey — accelerator from config (default Ctrl+Alt+P).
+  // Re-registered when the user edits it in Settings via config:set.
+  try {
+    const cfg = await loadConfig(CONFIG_PATH, DEFAULT_CONFIG_PATH)
+    setPlayShortcut(cfg.playShortcut)
+  } catch (err) {
+    console.warn('[main] could not load config for shortcut registration', err)
+  }
+
   const win = createOperatorWindow()
   win.webContents.on('did-fail-load', (_e, code, desc, url) => {
     console.error(`[main] operator did-fail-load ${code} ${desc} ${url}`)
@@ -62,6 +73,10 @@ async function bootstrap() {
 }
 
 app.whenReady().then(bootstrap)
+
+app.on('will-quit', () => {
+  unregisterAllShortcuts()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()

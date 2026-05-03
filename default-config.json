@@ -30,5 +30,6 @@
   },
   "audio": { "fadeOutMs": 1500 },
   "podium": { "goldHeightPct": 88, "silverHeightPct": 78, "bronzeHeightPct": 68 },
-  "flagHoldMs": 5000
+  "flagHoldMs": 5000,
+  "playShortcut": "Control+Alt+P"
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { AppConfig, CeremonyTitle, TitleAnimation, HorizontalAlign, VerticalAlign } from '@restrike-mcm/shared'
 import { useConfig } from '../hooks/useConfig.js'
 import { api } from '../ipc-bridge.js'
@@ -43,6 +43,30 @@ function StringList({ label, items, onChange }: { label: string; items: string[]
 
 export function SettingsDialog({ open, onClose }: Props) {
   const { config, update } = useConfig()
+  const [recordingShortcut, setRecordingShortcut] = useState(false)
+
+  useEffect(() => {
+    if (!recordingShortcut || !open || !config) return
+    const handler = (e: KeyboardEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const k = e.key
+      if (['Control', 'Alt', 'Shift', 'Meta'].includes(k)) return
+      const mods: string[] = []
+      if (e.ctrlKey)  mods.push('Control')
+      if (e.altKey)   mods.push('Alt')
+      if (e.shiftKey) mods.push('Shift')
+      if (e.metaKey)  mods.push('Meta')
+      if (mods.length === 0) return
+      const keyName = k.length === 1 ? k.toUpperCase() : k
+      const accelerator = [...mods, keyName].join('+')
+      setRecordingShortcut(false)
+      update({ playShortcut: accelerator })
+    }
+    window.addEventListener('keydown', handler, true)
+    return () => window.removeEventListener('keydown', handler, true)
+  }, [recordingShortcut, open, config, update])
+
   if (!open || !config) return null
 
   const set = <K extends keyof AppConfig>(k: K, v: AppConfig[K]) => update({ [k]: v } as Partial<AppConfig>)
@@ -193,6 +217,24 @@ export function SettingsDialog({ open, onClose }: Props) {
             <h5>Audio fade-out (ms)</h5>
             <input type="number" min={0} max={5000} value={config.audio.fadeOutMs}
               onChange={e => set('audio', { fadeOutMs: parseInt(e.target.value) || 0 })} />
+          </div>
+
+          <div className="settings-section">
+            <h5>PLAY shortcut (global hotkey)</h5>
+            <div className="shortcut-row">
+              <kbd className="shortcut-current">{config.playShortcut}</kbd>
+              {recordingShortcut ? (
+                <>
+                  <span className="shortcut-hint">Press the new shortcut…</span>
+                  <button className="btn-secondary" onClick={() => setRecordingShortcut(false)}>Cancel</button>
+                </>
+              ) : (
+                <>
+                  <button className="btn-secondary" onClick={() => setRecordingShortcut(true)}>Change…</button>
+                  <button className="btn-secondary" onClick={() => set('playShortcut', 'Control+Alt+P')}>Reset</button>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="settings-section">

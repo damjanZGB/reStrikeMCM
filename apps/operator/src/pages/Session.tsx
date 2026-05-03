@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Ceremony, AppConfig } from '@restrike-mcm/shared'
 import { useSession } from '../hooks/useSession.js'
 import { useConfig } from '../hooks/useConfig.js'
@@ -50,9 +50,19 @@ export function Session() {
   }
   const dismissToast = (id: number) => setToasts(prev => prev.filter(t => t.id !== id))
 
+  // Always-fresh reference to handlePlay. The shortcut effect needs the
+  // latest closure (with current `active`, `audioInfo`) — without a ref,
+  // the listener captures the first render's handlePlay forever.
+  const handlePlayRef = useRef<() => void>(() => {})
+
   // Surface display-disconnect events as a toast.
   useEffect(() => {
     return api.display.onLost(() => showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.'))
+  }, [])
+
+  // Global Ctrl+Alt+P shortcut → trigger PLAY on the active ceremony.
+  useEffect(() => {
+    return api.ceremony.onShortcutPlay(() => { handlePlayRef.current() })
   }, [])
 
   // On startup, prefer the most recently updated saved session;
@@ -137,6 +147,10 @@ export function Session() {
   }
 
   const handleStop = () => api.ceremony.stop()
+
+  // Keep the ref pointing at the latest handlePlay closure each render,
+  // so the global-shortcut listener always invokes the current one.
+  handlePlayRef.current = handlePlay
 
   return (
     <>

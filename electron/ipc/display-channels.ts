@@ -1,11 +1,18 @@
 import { ipcMain, screen } from 'electron'
 import { join } from 'node:path'
 import { loadConfig } from '@restrike-mcm/core'
-import { createDisplayWindow, closeDisplayWindow, loadDisplayContent } from '../windows.js'
+import { createDisplayWindow, closeDisplayWindow, loadDisplayContent, getDisplayWindow } from '../windows.js'
 import { ASSETS_ROOT, CONFIG_PATH, DEFAULT_CONFIG_PATH } from '../paths.js'
 
 export function registerDisplayChannels() {
   ipcMain.handle('display:push', async () => {
+    const existing = getDisplayWindow()
+    if (existing) {
+      // Already open — just bring it forward, don't reload (would lose
+      // mid-ceremony state) and don't open a second window.
+      existing.focus()
+      return { ok: true, reason: 'Display 2 already active' }
+    }
     const win = createDisplayWindow()
     win.webContents.on('did-fail-load', (_e, code, desc, url) => {
       console.error(`[main] display did-fail-load ${code} ${desc} ${url}`)

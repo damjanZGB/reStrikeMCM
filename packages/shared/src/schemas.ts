@@ -94,4 +94,5 @@ export const AppConfigSchema = z.object({
     bronzeHeightPct: z.number().min(30).max(100),
   }),
   flagHoldMs: z.number().min(0).max(60000).default(5000),
+  playShortcut: z.string().min(1).default('Control+Alt+P'),
 })

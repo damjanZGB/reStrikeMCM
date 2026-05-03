@@ -95,6 +95,7 @@ export interface AppConfig {
   audio: { fadeOutMs: number }
   podium: PodiumHeights
   flagHoldMs: number          // ms flags remain visible after anthem ends, before fading out
+  playShortcut: string        // Electron accelerator string for global PLAY hotkey, e.g. "Control+Alt+P"
 }
 
 export interface PlayoutInstruction {

@@ -43,6 +43,11 @@ const api = {
       ipcRenderer.on('ceremony:phase-change', listener)
       return () => ipcRenderer.removeListener('ceremony:phase-change', listener)
     },
+    onShortcutPlay: (cb: () => void) => {
+      const listener = () => cb()
+      ipcRenderer.on('shortcut:play', listener)
+      return () => ipcRenderer.removeListener('shortcut:play', listener)
+    },
     onPlay: (cb: (instr: any) => void) => {
       const listener = (_: any, payload: any) => cb(payload)
       ipcRenderer.on('ceremony:play', listener)

@@ -22,6 +22,12 @@ export function createOperatorWindow(): BrowserWindow {
 }
 
 export function createDisplayWindow(): BrowserWindow {
+  // Idempotent: if a display window is already open, reuse it instead of
+  // creating a second one (multi-instance display would steal focus,
+  // duplicate IPC subscriptions, and leak the previous window).
+  if (displayWin && !displayWin.isDestroyed()) {
+    return displayWin
+  }
   const displays = screen.getAllDisplays()
   const primary = screen.getPrimaryDisplay()
   const secondary = displays.find(d => d.id !== primary.id)
@@ -42,14 +48,23 @@ export function createDisplayWindow(): BrowserWindow {
       autoplayPolicy: 'no-user-gesture-required' as const,
     },
   })
+  // Clear the ref proactively when the user closes the display window
+  // (X-button, OS task-kill, etc.). Otherwise getDisplayWindow() would
+  // return a zombie reference until display:reset is invoked.
+  displayWin.on('closed', () => {
+    displayWin = null
+  })
   displayWin.webContents.openDevTools({ mode: 'detach' })  // TEMP debug
   return displayWin
 }
 
 export function getOperatorWindow() { return operatorWin }
-export function getDisplayWindow()  { return displayWin }
+/** Returns the live display window, or null if it doesn't exist or was destroyed. */
+export function getDisplayWindow(): BrowserWindow | null {
+  return displayWin && !displayWin.isDestroyed() ? displayWin : null
+}
 export function closeDisplayWindow() {
-  displayWin?.close()
+  if (displayWin && !displayWin.isDestroyed()) displayWin.close()
   displayWin = null
 }
 
