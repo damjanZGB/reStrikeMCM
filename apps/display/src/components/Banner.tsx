@@ -53,12 +53,17 @@ export function Banner({ flagJsonPath, riseProgress, targetFraction, goldTintEna
     return () => { cancelled = true; animRef.current?.destroy(); animRef.current = null }
   }, [flagJsonPath])
 
-  const translateY = (1 - riseProgress) * 120
+  // Translate in vh, not %-of-own-height: at rise=0 the banner is pushed
+  // 100vh below its anchor — always off-screen regardless of slot top or
+  // banner height. With %-of-banner-height (the old approach) the actual
+  // off-screen distance varied per banner, leaving short banners with
+  // 1/3 already visible at start.
+  const translateYvh = (1 - riseProgress) * 100
   const slotHeightPct = targetFraction * 100
 
   return (
     <div className={`banner-slot${goldTintEnabled ? ' gold-tint' : ''}`} style={{ height: `${slotHeightPct}%` }}>
-      <div ref={lottieRef} className="banner" style={{ transform: `translateY(${translateY}%)`, aspectRatio }} />
+      <div ref={lottieRef} className="banner" style={{ transform: `translateY(${translateYvh}vh)`, aspectRatio }} />
     </div>
   )
 }
