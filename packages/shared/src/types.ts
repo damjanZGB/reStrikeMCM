@@ -42,6 +42,8 @@ export interface CeremonyDisplayOptions {
   goldTint: boolean
   textsEnabled: boolean
   backgroundOverride?: string | undefined
+  transparentBackground?: boolean | undefined
+  backdropEnabled?: boolean | undefined
 }
 
 export interface Ceremony {
@@ -92,6 +94,8 @@ export interface AppConfig {
     goldTint: boolean
     rankLabelStyle: RankLabelStyle
   }
+  transparentBackground: boolean
+  backdropEnabled: boolean
   audio: { fadeOutMs: number }
   podium: PodiumHeights
   flagHoldMs: number          // ms flags remain visible after anthem ends, before fading out
