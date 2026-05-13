@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { AppConfigSchema, CeremonySchema, AthleteSchema } from '../schemas.js'
+import { AppConfigSchema, CeremonySchema, AthleteSchema, CeremonyDisplayOptionsSchema } from '../schemas.js'
+import type { AppConfig } from '../types.js'
 import { SHIPPED_DEFAULT_CONFIG } from '../constants.js'
 
 describe('AppConfigSchema', () => {
@@ -63,5 +64,37 @@ describe('CeremonySchema', () => {
       status: 'pending',
     }
     expect(() => CeremonySchema.parse(c)).toThrow()
+  })
+})
+
+describe('AppConfigSchema — transparency & backdrop', () => {
+  it('defaults transparentBackground to false when missing', () => {
+    const { transparentBackground: _omit, ...without } = SHIPPED_DEFAULT_CONFIG as AppConfig & { transparentBackground?: boolean }
+    const parsed = AppConfigSchema.parse(without)
+    expect(parsed.transparentBackground).toBe(false)
+  })
+
+  it('defaults backdropEnabled to true when missing', () => {
+    const { backdropEnabled: _omit, ...without } = SHIPPED_DEFAULT_CONFIG as AppConfig & { backdropEnabled?: boolean }
+    const parsed = AppConfigSchema.parse(without)
+    expect(parsed.backdropEnabled).toBe(true)
+  })
+
+  it('accepts explicit transparentBackground=true', () => {
+    const cfg = { ...SHIPPED_DEFAULT_CONFIG, transparentBackground: true }
+    expect(() => AppConfigSchema.parse(cfg)).not.toThrow()
+  })
+})
+
+describe('CeremonyDisplayOptionsSchema — per-ceremony overrides', () => {
+  it('accepts undefined for both override fields', () => {
+    const d = { rankLabelStyle: 'position', riseCurve: 'rise-hold', namesMode: 'title-card', goldTint: false, textsEnabled: true }
+    expect(() => CeremonyDisplayOptionsSchema.parse(d)).not.toThrow()
+  })
+
+  it('accepts true/false for transparentBackground and backdropEnabled', () => {
+    const base = { rankLabelStyle: 'position', riseCurve: 'rise-hold', namesMode: 'title-card', goldTint: false, textsEnabled: true }
+    expect(() => CeremonyDisplayOptionsSchema.parse({ ...base, transparentBackground: true,  backdropEnabled: false })).not.toThrow()
+    expect(() => CeremonyDisplayOptionsSchema.parse({ ...base, transparentBackground: false, backdropEnabled: true  })).not.toThrow()
   })
 })

@@ -36,6 +36,8 @@ export const SHIPPED_DEFAULT_CONFIG: AppConfig = {
     goldTint: false,
     rankLabelStyle: 'position',
   },
+  transparentBackground: false,
+  backdropEnabled: true,
   audio: { fadeOutMs: DEFAULT_FADE_OUT_MS },
   podium: { goldHeightPct: 88, silverHeightPct: 78, bronzeHeightPct: 68 },
   flagHoldMs: 5000,

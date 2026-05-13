@@ -28,6 +28,8 @@
     "goldTint": false,
     "rankLabelStyle": "position"
   },
+  "transparentBackground": false,
+  "backdropEnabled": true,
   "audio": { "fadeOutMs": 1500 },
   "podium": { "goldHeightPct": 88, "silverHeightPct": 78, "bronzeHeightPct": 68 },
   "flagHoldMs": 5000,

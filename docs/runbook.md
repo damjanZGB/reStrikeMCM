@@ -42,3 +42,36 @@ These all have anthems and Lottie flags in `assets/`.
 - **No sound** → confirm Windows default audio device is the projector or main speakers; check Howler isn't blocked by Windows audio mixer
 - **Banner doesn't rise** → check console (Ctrl+Shift+I in operator window) for Lottie load errors; confirm flag JSON file is valid
 - **Config rejected** → restart app, copy `default-config.json` over `config.json` to reset
+
+## Transparent display output (OBS / vMix capture)
+
+The display window can be opened with an alpha channel so capture software preserves PNG transparency end-to-end.
+
+**Enable in app:** Settings → Display output → check "Transparent background output". The display window restarts automatically. To remove the backdrop entirely (no image, no fallback), also uncheck "Show backdrop image".
+
+Per-ceremony overrides are in each ceremony's Display options panel ("Transparency" and "Backdrop" selects).
+
+### OBS configuration
+
+1. Add a **Window Capture** source.
+2. **Window:** select `reStrike MCM · Display`.
+3. **Capture Method:** `Windows 10 (1903+)`.
+4. **Capture Cursor:** off.
+5. **Client Area:** on.
+6. The source now has an alpha channel — compose it on top of any background scene element.
+
+To preserve alpha in recordings: use `mov` container with QuickTime/RLE codec, or use NDI output. Streaming output (x264) flattens alpha.
+
+### vMix configuration
+
+1. Add a **DesktopCapture2** input.
+2. Select the `reStrike MCM · Display` window.
+3. The input carries alpha; place it above other inputs in your scene.
+
+### Single-monitor controls
+
+When transparent mode is on and there is no secondary monitor, the display window is borderless and has no chrome. Operator UI exposes three controls next to "Push to Display 2":
+
+- **Move/resize** — toggle a translucent drag strip across the top and a corner drag handle. While on, always-on-top is suspended so you can place other windows.
+- **Always on top** — stays on top of OBS, vMix, etc. (default on).
+- **Close display** — close the window.

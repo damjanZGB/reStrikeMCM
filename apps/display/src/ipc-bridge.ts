@@ -6,6 +6,8 @@ export interface DisplayApi {
   }
   display: {
     resolveDefaultBackdrop(): Promise<string>
+    getMode(): Promise<{ transparentBackground: boolean; backdropEnabled: boolean }>
+    onMoveModeChanged(cb: (enabled: boolean) => void): () => void
   }
   ceremony: {
     onPlay(cb: (i: PlayoutInstruction) => void): () => void

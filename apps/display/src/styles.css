@@ -90,3 +90,33 @@ html, body, #root { margin: 0; padding: 0; height: 100%; overflow: hidden; backg
 .tc-medalists li { display: flex; align-items: center; gap: 1vw; }
 .tc-medalists em { color: #aaa; font-style: normal; letter-spacing: 0.1em; }
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+/* Transparent output: when the display window has `transparent: true`, every
+   solid background up the tree has to be cleared so the alpha channel can pass
+   through to OBS/vMix Window Capture. Toggled by App.tsx on the html/body/#root
+   and .display-root nodes based on the resolved display mode. */
+html.transparent, body.transparent, #root.transparent { background: transparent; }
+.display-root.transparent,
+.display-root.transparent .backdrop {
+  background: transparent;
+  background-color: transparent;
+}
+
+/* Move-mode handles — only rendered when the operator clicks Move/resize on a
+   transparent display window without a secondary monitor (otherwise the window
+   is frameless and there's no way to drag/resize it). 8px translucent strip
+   along the top and a 16x16 corner handle bottom-right, both `app-region: drag`. */
+.move-handle-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-app-region: drag;
+  z-index: 9999;
+  pointer-events: auto;
+}
+.move-handle-corner {
+  position: fixed; bottom: 0; right: 0; width: 16px; height: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-app-region: drag;
+  z-index: 9999;
+  pointer-events: auto;
+}

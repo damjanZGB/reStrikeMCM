@@ -44,6 +44,10 @@ export function Session() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [loaderOpen, setLoaderOpen] = useState(false)
   const [toasts, setToasts] = useState<Toast[]>([])
+  const [hasSecondary, setHasSecondary] = useState(false)
+  const [displayOpen, setDisplayOpen] = useState(false)
+  const [moveMode, setMoveModeState] = useState(false)
+  const [aot, setAot] = useState(true)
 
   const showToast = (kind: Toast['kind'], message: string) => {
     setToasts(prev => [...prev, { id: Date.now() + Math.random(), kind, message }])
@@ -55,9 +59,27 @@ export function Session() {
   // the listener captures the first render's handlePlay forever.
   const handlePlayRef = useRef<() => void>(() => {})
 
-  // Surface display-disconnect events as a toast.
+  // Surface display-disconnect events as a toast and clear the open state.
   useEffect(() => {
-    return api.display.onLost(() => showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.'))
+    return api.display.onLost(() => {
+      showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.')
+      setDisplayOpen(false)
+    })
+  }, [])
+
+  useEffect(() => {
+    api.display.hasSecondary().then(setHasSecondary)
+    return api.display.onMonitorConfigChanged(info => setHasSecondary(info.hasSecondary))
+  }, [])
+
+  useEffect(() => {
+    return api.display.onRestartedForTransparency(() => {
+      showToast('info', 'Display window restarted to apply transparency change.')
+      // After restart the window is open with current AOT default (true).
+      setDisplayOpen(true)
+      setMoveModeState(false)
+      setAot(true)
+    })
   }, [])
 
   // Global Ctrl+Alt+P shortcut → trigger PLAY on the active ceremony.
@@ -161,7 +183,43 @@ export function Session() {
           <button className="btn-secondary" onClick={handleSave}>💾 Save</button>
           <button className="btn-secondary" onClick={() => setLoaderOpen(true)}>📂 Load session</button>
           <button className="btn-secondary" onClick={() => setSettingsOpen(true)}>⚙ Settings</button>
-          <button className="btn-secondary" onClick={() => api.display.push()}>📺 Push to Display 2</button>
+          <button className="btn-secondary" onClick={async () => {
+            const r = await api.display.push()
+            if (r.ok) setDisplayOpen(true)
+          }}>📺 Push to Display 2</button>
+          {displayOpen && config.transparentBackground && !hasSecondary && (
+            <div className="display-controls">
+              <button
+                className={`btn-secondary${moveMode ? ' active' : ''}`}
+                onClick={async () => {
+                  const next = !moveMode
+                  setMoveModeState(next)
+                  await api.display.setMoveMode(next)
+                }}
+              >
+                {moveMode ? '✓ Move/resize' : 'Move/resize'}
+              </button>
+              <button
+                className={`btn-secondary${aot ? ' active' : ''}`}
+                onClick={async () => {
+                  const next = !aot
+                  setAot(next)
+                  await api.display.setAlwaysOnTop(next)
+                }}
+              >
+                {aot ? '📌 Always on top' : 'Always on top'}
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={async () => {
+                  await api.display.reset()
+                  setDisplayOpen(false)
+                }}
+              >
+                ✕ Close display
+              </button>
+            </div>
+          )}
         </div>
       </header>
       <main className="session-layout">

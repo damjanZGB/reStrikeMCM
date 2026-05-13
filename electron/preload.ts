@@ -25,10 +25,29 @@ const api = {
     push: () => ipcRenderer.invoke('display:push'),
     reset: () => ipcRenderer.invoke('display:reset'),
     resolveDefaultBackdrop: () => ipcRenderer.invoke('display:resolve-default-backdrop'),
+    getMode: () => ipcRenderer.invoke('display:get-mode'),
+    setMoveMode: (enabled: boolean) => ipcRenderer.invoke('display:set-move-mode', enabled),
+    setAlwaysOnTop: (enabled: boolean) => ipcRenderer.invoke('display:set-always-on-top', enabled),
+    hasSecondary: () => ipcRenderer.invoke('display:has-secondary'),
     onLost: (cb: () => void) => {
       const listener = () => cb()
       ipcRenderer.on('display:lost', listener)
       return () => ipcRenderer.removeListener('display:lost', listener)
+    },
+    onMoveModeChanged: (cb: (enabled: boolean) => void) => {
+      const listener = (_: any, enabled: boolean) => cb(enabled)
+      ipcRenderer.on('display:move-mode-changed', listener)
+      return () => ipcRenderer.removeListener('display:move-mode-changed', listener)
+    },
+    onMonitorConfigChanged: (cb: (info: { hasSecondary: boolean }) => void) => {
+      const listener = (_: any, info: { hasSecondary: boolean }) => cb(info)
+      ipcRenderer.on('display:monitor-config-changed', listener)
+      return () => ipcRenderer.removeListener('display:monitor-config-changed', listener)
+    },
+    onRestartedForTransparency: (cb: (info: { transparentBackground: boolean }) => void) => {
+      const listener = (_: any, info: { transparentBackground: boolean }) => cb(info)
+      ipcRenderer.on('display:restarted-for-transparency', listener)
+      return () => ipcRenderer.removeListener('display:restarted-for-transparency', listener)
     },
   },
   fs: {
