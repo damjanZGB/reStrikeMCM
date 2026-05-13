@@ -8,6 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 let operatorWin: BrowserWindow | null = null
 let displayWin: BrowserWindow | null = null
 
+// Dev mode is detected by electron-vite's dev server env var. Packaged apps
+// don't set this, so DevTools won't auto-open on the user's machine.
+const isDev = !!process.env.ELECTRON_RENDERER_URL
+
 export function createOperatorWindow(): BrowserWindow {
   operatorWin = new BrowserWindow({
     width: 1280, height: 800, show: false, autoHideMenuBar: true,
@@ -17,7 +21,7 @@ export function createOperatorWindow(): BrowserWindow {
     },
   })
   operatorWin.on('ready-to-show', () => operatorWin?.show())
-  operatorWin.webContents.openDevTools({ mode: 'detach' })  // TEMP for debugging — remove after validation
+  if (isDev) operatorWin.webContents.openDevTools({ mode: 'detach' })
   return operatorWin
 }
 
@@ -69,7 +73,7 @@ export function createDisplayWindow(opts: { transparent: boolean } = { transpare
   // (X-button, OS task-kill, etc.). Otherwise getDisplayWindow() would
   // return a zombie reference until display:reset is invoked.
   displayWin.on('closed', () => { displayWin = null })
-  displayWin.webContents.openDevTools({ mode: 'detach' })  // TEMP debug
+  if (isDev) displayWin.webContents.openDevTools({ mode: 'detach' })
   return displayWin
 }
 
