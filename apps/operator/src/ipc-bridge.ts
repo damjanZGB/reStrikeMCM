@@ -19,7 +19,13 @@ export interface OperatorApi {
   display: {
     push(): Promise<{ ok: boolean; reason?: string }>
     reset(): Promise<void>
+    getMode(): Promise<{ transparentBackground: boolean; backdropEnabled: boolean }>
+    setMoveMode(enabled: boolean): Promise<void>
+    setAlwaysOnTop(enabled: boolean): Promise<void>
+    hasSecondary(): Promise<boolean>
     onLost(cb: () => void): () => void
+    onMonitorConfigChanged(cb: (info: { hasSecondary: boolean }) => void): () => void
+    onRestartedForTransparency(cb: (info: { transparentBackground: boolean }) => void): () => void
   }
   ceremony: {
     play(c: Ceremony): Promise<void>
