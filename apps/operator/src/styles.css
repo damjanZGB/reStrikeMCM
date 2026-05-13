@@ -36,7 +36,9 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a14; color
 .btn-primary { background: gold; color: #000; padding: 10px 24px; border: 0; border-radius: 4px; font-weight: 700; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-secondary { background: #252540; color: #fff; padding: 6px 14px; border: 0; border-radius: 4px; cursor: pointer; }
+.btn-secondary.active { background: #3a3a60; outline: 1px solid gold; }
 .btn-danger { background: #c0392b; color: #fff; padding: 6px 14px; border: 0; border-radius: 4px; cursor: pointer; }
+.display-controls { display: flex; gap: 8px; }
 .live-preview { position: relative; aspect-ratio: 16 / 9; background: linear-gradient(180deg, #0a0a1a, #1a1a2e); border: 1px solid #2a2a3a; border-radius: 4px; overflow: hidden; margin-top: 10px; }
 .lp-label { position: absolute; top: 6px; left: 6px; background: #000a; color: #fff; padding: 1px 6px; border-radius: 2px; font-size: 0.55rem; letter-spacing: 0.1em; }
 .lp-title { position: absolute; top: 8%; left: 0; right: 0; text-align: center; color: #aaa; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
