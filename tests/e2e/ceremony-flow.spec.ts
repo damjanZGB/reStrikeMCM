@@ -1,5 +1,10 @@
 import { test, expect, _electron as electron } from '@playwright/test'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// `package.json` declares `"type": "module"` so the implicit CommonJS
+// `__dirname` is undefined in spec files — restore it via import.meta.
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 test('app launches and operator window shows session UI', async () => {
   const app = await electron.launch({
