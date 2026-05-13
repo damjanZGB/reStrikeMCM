@@ -43,6 +43,8 @@ export const CeremonyDisplayOptionsSchema = z.object({
   goldTint: z.boolean(),
   textsEnabled: z.boolean().default(true),
   backgroundOverride: z.string().optional(),
+  transparentBackground: z.boolean().optional(),
+  backdropEnabled: z.boolean().optional(),
 })
 
 export const CeremonySchema = z.object({
@@ -87,6 +89,8 @@ export const AppConfigSchema = z.object({
     goldTint: z.boolean(),
     rankLabelStyle: RankLabelStyleSchema,
   }),
+  transparentBackground: z.boolean().default(false),
+  backdropEnabled: z.boolean().default(true),
   audio: z.object({ fadeOutMs: z.number().min(0).max(5000) }),
   podium: z.object({
     goldHeightPct: z.number().min(30).max(100),
