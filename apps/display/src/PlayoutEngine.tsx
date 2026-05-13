@@ -42,6 +42,8 @@ function buildTitleStyles(title: CeremonyTitle): { wrapper: React.CSSProperties;
 interface Props {
   instruction: PlayoutInstruction | null
   defaultBackdropPath?: string | null | undefined
+  transparent: boolean
+  backdropOn: boolean
 }
 
 const RANK_BADGE_CLASS: Record<Rank, string> = {
@@ -49,7 +51,7 @@ const RANK_BADGE_CLASS: Record<Rank, string> = {
 }
 const RANK_INDEX: Record<Rank, 0|1|2|3> = { gold: 0, silver: 1, bronze1: 2, bronze2: 3 }
 
-export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
+export function PlayoutEngine({ instruction, defaultBackdropPath, transparent, backdropOn }: Props) {
   const [phase, setPhase] = useState<PlayoutPhase>('idle')
   const [t, setT] = useState(0)
   const startedAtRef = useRef<number | null>(null)
@@ -127,17 +129,21 @@ export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
     }
   }, [phase, instruction])
 
-  // Backdrop is rendered always — uses the instruction's resolved path
-  // when a ceremony is active, otherwise falls back to the default backdrop
-  // (fetched on App mount). Visible as soon as display 2 opens.
-  const backdropPath = instruction?.resolvedAssets.backgroundPath ?? defaultBackdropPath
+  // Backdrop resolution. When `backdropOn` is false, we skip the entire <div>
+  // (no image rendered, no fetch). This is what gives the "fully transparent
+  // output" mode when combined with transparent === true.
+  const backdropPath = backdropOn
+    ? (instruction?.resolvedAssets.backgroundPath ?? defaultBackdropPath)
+    : null
   const backdropStyle = backdropPath
     ? { backgroundImage: `url("${toFileUrl(backdropPath)}")` }
     : undefined
 
+  const rootClass = `display-root${transparent ? ' transparent' : ''}`
+
   if (!instruction) {
     return (
-      <div className="display-root">
+      <div className={rootClass}>
         {backdropPath && <div className="backdrop" style={backdropStyle} />}
       </div>
     )
@@ -159,7 +165,7 @@ export function PlayoutEngine({ instruction, defaultBackdropPath }: Props) {
   const labels = instruction.config.rankLabels[ceremony.display.rankLabelStyle] ?? instruction.config.rankLabels.position
 
   return (
-    <div className="display-root">
+    <div className={rootClass}>
       {backdropPath && <div className="backdrop" style={backdropStyle} />}
 
       {phase === 'title-card' && textsEnabled && (
