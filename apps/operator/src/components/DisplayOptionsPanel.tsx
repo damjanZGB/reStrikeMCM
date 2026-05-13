@@ -15,6 +15,10 @@ function toFileUrl(absPath: string): string {
   return normalized.startsWith('/') ? `file://${normalized}` : `file:///${normalized}`
 }
 
+type TriState = 'inherit' | 'true' | 'false'
+const toTri = (v: boolean | undefined): TriState => v === undefined ? 'inherit' : v ? 'true' : 'false'
+const fromTri = (v: TriState): boolean | undefined => v === 'inherit' ? undefined : v === 'true'
+
 export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
   const set = <K extends keyof Ceremony['display']>(k: K, v: Ceremony['display'][K]) => onChange({ ...display, [k]: v })
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -78,6 +82,28 @@ export function DisplayOptionsPanel({ display, audioInfo, onChange }: Props) {
 
       <label className="toggle-row">Disable all texts and titles
         <input type="checkbox" checked={!display.textsEnabled} onChange={e => set('textsEnabled', !e.target.checked)} />
+      </label>
+
+      <label>Transparency
+        <select
+          value={toTri(display.transparentBackground)}
+          onChange={e => set('transparentBackground', fromTri(e.target.value as TriState))}
+        >
+          <option value="inherit">Use global default</option>
+          <option value="true">Transparent</option>
+          <option value="false">Opaque</option>
+        </select>
+      </label>
+
+      <label>Backdrop
+        <select
+          value={toTri(display.backdropEnabled)}
+          onChange={e => set('backdropEnabled', fromTri(e.target.value as TriState))}
+        >
+          <option value="inherit">Use global default</option>
+          <option value="true">Show backdrop</option>
+          <option value="false">Hide backdrop</option>
+        </select>
       </label>
 
       <h4>Background</h4>
