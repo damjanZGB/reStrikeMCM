@@ -1,4 +1,7 @@
 packages:
   - "packages/*"
   - "apps/*"
-  - "electron"
+# Note: `electron/` is the main-process source but is NOT a workspace member.
+# Registering it shadows the npm `electron` package under pnpm's hoisted linker
+# (the directory name collides). Its `@restrike-mcm/*` imports are resolved via
+# Vite aliases in electron.vite.config.ts at build time.
