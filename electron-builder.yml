@@ -19,7 +19,8 @@ win:
   target:
     - target: nsis
       arch: [x64]
-  artifactName: ${productName}-${version}-Setup.exe
+    - target: portable
+      arch: [x64]
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
@@ -30,3 +31,5 @@ nsis:
   shortcutName: reStrikeMCM
   uninstallDisplayName: reStrikeMCM ${version}
   artifactName: ${productName}-${version}-Setup.exe
+portable:
+  artifactName: ${productName}-${version}-Portable.exe
