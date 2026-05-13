@@ -5,6 +5,8 @@ out/
 .electron/
 .superpowers/
 sessions/
+test-results/
+playwright-report/
 *.log
 .DS_Store
 config.json
