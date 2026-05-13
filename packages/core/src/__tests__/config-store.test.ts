@@ -59,3 +59,23 @@ describe('saveConfig', () => {
     await expect(saveConfig(configPath, bad as any)).rejects.toThrow()
   })
 })
+
+describe('round-trip of new transparency/backdrop fields', () => {
+  it('persists explicit values to disk and loads them back', async () => {
+    const configPath = join(dir, 'config.json')
+    const cfg = { ...SHIPPED_DEFAULT_CONFIG, transparentBackground: true, backdropEnabled: false }
+    await saveConfig(configPath, cfg)
+    const loaded = await loadConfig(configPath, '/nonexistent')
+    expect(loaded.transparentBackground).toBe(true)
+    expect(loaded.backdropEnabled).toBe(false)
+  })
+
+  it('fills defaults when loading a legacy config missing both fields', async () => {
+    const configPath = join(dir, 'config.json')
+    const { transparentBackground: _t, backdropEnabled: _b, ...legacy } = SHIPPED_DEFAULT_CONFIG
+    await writeFile(configPath, JSON.stringify(legacy))
+    const loaded = await loadConfig(configPath, '/nonexistent')
+    expect(loaded.transparentBackground).toBe(false)
+    expect(loaded.backdropEnabled).toBe(true)
+  })
+})
