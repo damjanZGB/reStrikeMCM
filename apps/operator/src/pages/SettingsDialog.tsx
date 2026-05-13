@@ -195,6 +195,27 @@ export function SettingsDialog({ open, onClose }: Props) {
           </div>
 
           <div className="settings-section">
+            <h5>Display output</h5>
+            <label className="toggle-row">Transparent background output (for OBS/vMix capture)
+              <input
+                type="checkbox"
+                checked={config.transparentBackground}
+                onChange={e => set('transparentBackground', e.target.checked)}
+              />
+            </label>
+            <div className="settings-hint">
+              Opens the display window with an alpha channel. The display window restarts when this changes.
+            </div>
+            <label className="toggle-row" style={{ marginTop: 8 }}>Show backdrop image
+              <input
+                type="checkbox"
+                checked={config.backdropEnabled}
+                onChange={e => set('backdropEnabled', e.target.checked)}
+              />
+            </label>
+          </div>
+
+          <div className="settings-section">
             <h5>Default backdrop image</h5>
             <div className="bg-row">
               <span className="bg-current">
