@@ -59,9 +59,12 @@ export function Session() {
   // the listener captures the first render's handlePlay forever.
   const handlePlayRef = useRef<() => void>(() => {})
 
-  // Surface display-disconnect events as a toast.
+  // Surface display-disconnect events as a toast and clear the open state.
   useEffect(() => {
-    return api.display.onLost(() => showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.'))
+    return api.display.onLost(() => {
+      showToast('error', 'Display 2 disconnected. Replug and click Push to Display 2.')
+      setDisplayOpen(false)
+    })
   }, [])
 
   useEffect(() => {
@@ -77,10 +80,6 @@ export function Session() {
       setMoveModeState(false)
       setAot(true)
     })
-  }, [])
-
-  useEffect(() => {
-    return api.display.onLost(() => setDisplayOpen(false))
   }, [])
 
   // Global Ctrl+Alt+P shortcut → trigger PLAY on the active ceremony.
